@@ -6,6 +6,7 @@ import Cart from '../components/Cart.vue'
 import ProductDetails from '../components/ProductDetails.vue'
 import Wishlist from '../components/Wishlist.vue'
 import Checkout from '../components/Checkout.vue'
+import Register from '../components/Register.vue'
 
 
 const routes = [
@@ -48,6 +49,11 @@ const routes = [
     path: '/checkout',
     name: 'Checkout',
     component: Checkout
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: Register
   }
 
 ]

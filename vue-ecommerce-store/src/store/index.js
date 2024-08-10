@@ -14,7 +14,8 @@ export default createStore({
     categories: [],
     wishlistItems: [],
     loading: false,
-    error: null
+    error: null,
+    user: null,
   },
   mutations: {
     // Auth mutations
@@ -57,6 +58,9 @@ export default createStore({
         if (index !== -1) {
           state.products[index] = updatedProduct;
         }
+      },
+      SET_USER(state, user) {
+        state.user = user;
       },
     
   },
@@ -123,6 +127,28 @@ export default createStore({
       removeFromWishlist({ commit }, itemId) {
         commit('REMOVE_FROM_WISHLIST', itemId);
       },
+      async login({ commit }, credentials) {
+        try {
+          // In a real app, you'd make an API call here
+          // For now, we'll simulate a successful login
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          const user = {
+            id: Date.now(),
+            username: credentials.username,
+          };
+          commit('SET_USER', user);
+          localStorage.setItem('user', JSON.stringify(user));
+          return user;
+        } catch (error) {
+          console.error('Login failed:', error);
+          throw error;
+        }
+      },
+      logout({ commit }) {
+        commit('SET_USER', null);
+        localStorage.removeItem('user');
+      }, 
+      
   },
   getters: {
     getProductById: (state) => (id) => {

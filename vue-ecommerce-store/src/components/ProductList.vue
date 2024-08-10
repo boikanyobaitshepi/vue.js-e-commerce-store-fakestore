@@ -1,6 +1,9 @@
 <template>
     <div class="product-list">
       <h1>Products</h1>
+      <div class="search-bar">
+      <input v-model="searchQuery" type="text" placeholder="Search products...">
+    </div>
       <div class="filters">
         <select v-model="selectedCategory" @change="filterProducts">
           <option value="">All Categories</option>
@@ -23,6 +26,11 @@
           <button @click="addToCart(product)">Add to Cart</button>
         </div>
       </div>
+      <div class="pagination">
+      <button @click="prevPage" :disabled="currentPage === 1">Previous</button>
+      <span>Page {{ currentPage }} of {{ totalPages }}</span>
+      <button @click="nextPage" :disabled="currentPage === totalPages">Next</button>
+    </div>
     </div>
   </template>
   
@@ -35,6 +43,52 @@
       const store = useStore();
       const selectedCategory = ref('');
       const sortBy = ref('default');
+      const currentPage = ref(1);
+    const itemsPerPage = 12;
+
+    const searchQuery = ref('');
+    const filteredProducts = computed(() => {
+      let result = products.value;
+      
+      // Apply search filter
+      if (searchQuery.value) {
+        const query = searchQuery.value.toLowerCase();
+        result = result.filter(product => 
+          product.title.toLowerCase().includes(query) ||
+          product.description.toLowerCase().includes(query) ||
+          product.category.toLowerCase().includes(query)
+        );
+      }
+      
+      // Apply category filter
+      if (selectedCategory.value) {
+        result = result.filter(p => p.category === selectedCategory.value);
+      }
+      
+      // Apply sorting
+      if (sortBy.value === 'price_asc') {
+        result = [...result].sort((a, b) => a.price - b.price);
+      } else if (sortBy.value === 'price_desc') {
+        result = [...result].sort((a, b) => b.price - a.price);
+      }
+      
+    const paginatedProducts = computed(() => {
+      const start = (currentPage.value - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      return filteredProducts.value.slice(start, end);
+    });
+
+    const totalPages = computed(() => 
+      Math.ceil(filteredProducts.value.length / itemsPerPage)
+    );
+
+    function prevPage() {
+      if (currentPage.value > 1) currentPage.value--;
+    }
+
+    function nextPage() {
+      if (currentPage.value < totalPages.value) currentPage.value++;
+    }
   
       const products = computed(() => store.state.products);
       const categories = computed(() => store.state.categories);
@@ -79,6 +133,11 @@
         filterProducts,
         sortProducts,
         addToCart,
+        paginatedProducts,
+      currentPage,
+      totalPages,
+      prevPage,
+      nextPage,
       };
     }
   }
@@ -110,4 +169,24 @@
     height: 200px;
     object-fit: contain;
   }
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination button {
+  margin: 0 10px;
+}
+.search-bar {
+  margin-bottom: 20px;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+}
   </style>
