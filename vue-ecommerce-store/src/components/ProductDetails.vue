@@ -29,9 +29,6 @@
         <button type="submit">Submit Review</button>
       </form>
     </div>
-  
-
-
   </template>
   
   <script>
@@ -46,7 +43,11 @@
   
       const productId = computed(() => parseInt(route.params.id));
       const product = computed(() => store.getters.getProductById(productId.value));
-  
+
+      const newReview = ref({
+      rating: null,
+      comment: '',
+      });
       function addToCart(product) {
         store.dispatch('addToCart', product);
       }
@@ -55,11 +56,37 @@
         // Implement wishlist functionality
         console.log('Add to wishlist:', product);
       }
+      function submitReview() {
+      // In a real application, you would send this to your backend API
+      const review = {
+        id: Date.now(), // Use a real ID in production
+        user: 'Current User', // Use the actual logged-in user's name
+        date: new Date().toLocaleDateString(),
+        rating: newReview.value.rating,
+        comment: newReview.value.comment,
+      };
+
+      // Add the review to the product
+      if (!product.value.reviews) {
+        product.value.reviews = [];
+      }
+      product.value.reviews.push(review);
+
+      // Reset the form
+      newReview.value = { rating: null, comment: '' };
+      
+      // Update the product in the store
+      store.commit('UPDATE_PRODUCT', product.value);
+    }
+
   
       return {
         product,
         addToCart,
         addToWishlist,
+        newReview,
+        submitReview,
+
       };
     }
   }
@@ -77,4 +104,27 @@
     max-width: 300px;
     height: auto;
   }
-  </style>
+  .reviews {
+  margin-top: 20px;
+}
+
+.review {
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0;
+}
+
+form {
+  margin-top: 20px;
+}
+
+input, textarea {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 5px;
+}
+
+button {
+  margin-top: 10px;
+}
+</style>

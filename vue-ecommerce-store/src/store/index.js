@@ -52,6 +52,13 @@ export default createStore({
       REMOVE_FROM_WISHLIST(state, itemId) {
         state.wishlistItems = state.wishlistItems.filter(item => item.id !== itemId);
       },
+      UPDATE_PRODUCT(state, updatedProduct) {
+        const index = state.products.findIndex(p => p.id === updatedProduct.id);
+        if (index !== -1) {
+          state.products[index] = updatedProduct;
+        }
+      },
+    
   },
   actions: {
     // Auth actions
