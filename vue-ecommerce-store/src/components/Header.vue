@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
     <header
       @mousemove="onMousemove"
       :style="{ backgroundColor: `hsl(${x}, 80%, 50%)` }"
@@ -59,65 +59,65 @@
   </template>
   
   <script>
-  import { ref, computed } from 'vue';
-  import { useStore } from 'vuex';
-  import { useRouter } from 'vue-router';
+//   import { ref, computed } from 'vue';
+//   import { useStore } from 'vuex';
+//   import { useRouter } from 'vue-router';
   
-  export default {
-    setup() {
-      const store = useStore();
-      const router = useRouter();
-      const x = ref(0);
-      const showModal = ref(null);
-      const loginForm = ref({ username: '', password: '' });
-      const signupForm = ref({ username: '', email: '', password: '' });
+//   export default {
+//     setup() {
+//       const store = useStore();
+//       const router = useRouter();
+//       const x = ref(0);
+//       const showModal = ref(null);
+//       const loginForm = ref({ username: '', password: '' });
+//       const signupForm = ref({ username: '', email: '', password: '' });
   
-      const isLoggedIn = computed(() => store.state.auth.isLoggedIn);
-      const cartItemCount = computed(() => store.state.cart.items.length);
+//       const isLoggedIn = computed(() => store.state.auth.isLoggedIn);
+//       const cartItemCount = computed(() => store.state.cart.items.length);
   
-      function onMousemove(e) {
-        x.value = e.clientX;
-      }
+//       function onMousemove(e) {
+//         x.value = e.clientX;
+//       }
   
-      async function login() {
-        try {
-          await store.dispatch('auth/login', loginForm.value);
-          showModal.value = null;
-          router.push('/');
-        } catch (error) {
-          console.error('Login failed:', error);
-        }
-      }
+//       async function login() {
+//         try {
+//           await store.dispatch('auth/login', loginForm.value);
+//           showModal.value = null;
+//           router.push('/');
+//         } catch (error) {
+//           console.error('Login failed:', error);
+//         }
+//       }
   
-      async function signup() {
-        try {
-          await store.dispatch('auth/signup', signupForm.value);
-          showModal.value = null;
-          router.push('/');
-        } catch (error) {
-          console.error('Signup failed:', error);
-        }
-      }
+//       async function signup() {
+//         try {
+//           await store.dispatch('auth/signup', signupForm.value);
+//           showModal.value = null;
+//           router.push('/');
+//         } catch (error) {
+//           console.error('Signup failed:', error);
+//         }
+//       }
   
-      function logout() {
-        store.dispatch('auth/logout');
-        router.push('/');
-      }
+//       function logout() {
+//         store.dispatch('auth/logout');
+//         router.push('/');
+//       }
   
-      return {
-        x,
-        onMousemove,
-        showModal,
-        loginForm,
-        signupForm,
-        isLoggedIn,
-        cartItemCount,
-        login,
-        signup,
-        logout,
-      };
-    },
-  };
+//       return {
+//         x,
+//         onMousemove,
+//         showModal,
+//         loginForm,
+//         signupForm,
+//         isLoggedIn,
+//         cartItemCount,
+//         login,
+//         signup,
+//         logout,
+//       };
+//     },
+//   };
   </script>
   
   <style>
@@ -144,4 +144,4 @@
   button:hover {
     background-color: #45a049;
   }
-  </style> -->
+  </style>
