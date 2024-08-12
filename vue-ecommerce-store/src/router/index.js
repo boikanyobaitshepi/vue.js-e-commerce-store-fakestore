@@ -9,14 +9,14 @@ import ProductList from '../components/ProductList.vue'
 import  Header from '../components/Header.vue'
 
 const routes = [
+  // {
+  //   path: '/',
+  //   name: 'Header',
+  //   component: Header
+
+  // },
   {
     path: '/',
-    name: 'Header',
-    component: Header
-
-  },
-  {
-    path: '/products',
     name: 'ProductList',
     component: ProductList
   },

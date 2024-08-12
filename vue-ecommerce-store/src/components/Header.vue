@@ -5,8 +5,8 @@
     >
       <nav>
         <ul>
-          <li><router-link to="/"><i class="fas fa-home"></i> Home</router-link></li>
-          <li><router-link to="/products"><i class="fas fa-store"></i> Products</router-link></li>
+          <!-- <li><router-link to="/"><i class="fas fa-home"></i> Home</router-link></li> -->
+          <li><router-link to="/"><i class="fas fa-store"></i> Home</router-link></li>
           <li><router-link to="/cart"><i class="fas fa-shopping-cart"></i> Cart ({{ cartItemCount }})</router-link></li>
           <li><router-link to="/wishlist"><i class="fas fa-heart"></i> Wishlist</router-link></li>
           <li v-if="!isLoggedIn">
@@ -59,70 +59,133 @@
   </template>
   
   <script>
-//   import { ref, computed } from 'vue';
-//   import { useStore } from 'vuex';
-//   import { useRouter } from 'vue-router';
+  import { ref, computed } from 'vue';
+  import { useStore } from 'vuex';
+  import { useRouter } from 'vue-router';
   
-//   export default {
-//     setup() {
-//       const store = useStore();
-//       const router = useRouter();
-//       const x = ref(0);
-//       const showModal = ref(null);
-//       const loginForm = ref({ username: '', password: '' });
-//       const signupForm = ref({ username: '', email: '', password: '' });
+  export default {
+    setup() {
+      const store = useStore();
+      const router = useRouter();
+      const x = ref(0);
+      const showModal = ref(null);
+      const loginForm = ref({ username: '', password: '' });
+      const signupForm = ref({ username: '', email: '', password: '' });
   
-//       const isLoggedIn = computed(() => store.state.auth.isLoggedIn);
-//       const cartItemCount = computed(() => store.state.cart.items.length);
+    //   const isLoggedIn = computed(() => store.state.auth.isLoggedIn);
+    //   const cartItemCount = computed(() => store.state.cart.items.length);
   
-//       function onMousemove(e) {
-//         x.value = e.clientX;
-//       }
+      function onMousemove(e) {
+        x.value = e.clientX;
+      }
   
-//       async function login() {
-//         try {
-//           await store.dispatch('auth/login', loginForm.value);
-//           showModal.value = null;
-//           router.push('/');
-//         } catch (error) {
-//           console.error('Login failed:', error);
-//         }
-//       }
+      async function login() {
+        try {
+          await store.dispatch('auth/login', loginForm.value);
+          showModal.value = null;
+          router.push('/');
+        } catch (error) {
+          console.error('Login failed:', error);
+        }
+      }
   
-//       async function signup() {
-//         try {
-//           await store.dispatch('auth/signup', signupForm.value);
-//           showModal.value = null;
-//           router.push('/');
-//         } catch (error) {
-//           console.error('Signup failed:', error);
-//         }
-//       }
+      async function signup() {
+        try {
+          await store.dispatch('auth/signup', signupForm.value);
+          showModal.value = null;
+          router.push('/');
+        } catch (error) {
+          console.error('Signup failed:', error);
+        }
+      }
   
-//       function logout() {
-//         store.dispatch('auth/logout');
-//         router.push('/');
-//       }
+      function logout() {
+        store.dispatch('auth/logout');
+        router.push('/');
+      }
   
-//       return {
-//         x,
-//         onMousemove,
-//         showModal,
-//         loginForm,
-//         signupForm,
-//         isLoggedIn,
-//         cartItemCount,
-//         login,
-//         signup,
-//         logout,
-//       };
-//     },
-//   };
+      return {
+        x,
+        onMousemove,
+        showModal,
+        loginForm,
+        signupForm,
+        // isLoggedIn,
+        // cartItemCount,
+        login,
+        signup,
+        logout,
+      };
+    },
+  };
   </script>
   
   <style>
-  /* ... (keep the existing styles) ... */
-  
+  header {
+  transition: 0.3s background-color ease;
+  padding: 1rem;
+}
+
+nav ul {
+  display: flex;
+  justify-content: center;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav li {
+  margin: 0 1rem;
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+nav i {
+  margin-right: 0.5rem;
+}
+
+main {
+  padding: 2rem;
+}
+
+.modal {
+  display: block;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 30%;
+}
+
+.close-button {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
   form {
     display: flex;
     flex-direction: column;
