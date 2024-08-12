@@ -35,71 +35,23 @@
   </template>
   
   <script>
-  import { ref, computed, onMounted } from 'vue';
-  import { useStore } from 'vuex';
-  
-  export default {
-    setup() {
-      const store = useStore();
-      const selectedCategory = ref('');
-      const sortBy = ref('default');
-      const currentPage = ref(1);
+import { ref, computed, onMounted } from 'vue';
+import { useStore } from 'vuex';
+
+export default {
+  setup() {
+    const store = useStore();
+    const selectedCategory = ref('');
+    const sortBy = ref('default');
+    const currentPage = ref(1);
     const itemsPerPage = 12;
-
     const searchQuery = ref('');
-    
-    const paginatedProducts = computed(() => {
-      const start = (currentPage.value - 1) * itemsPerPage;
-      const end = start + itemsPerPage;
-      return filteredProducts.value.slice(start, end);
-    });
 
-    const totalPages = computed(() => 
-      Math.ceil(filteredProducts.value.length / itemsPerPage)
-    );
+    const products = computed(() => store.state.products);
+    const categories = computed(() => store.state.categories);
 
-    function prevPage() {
-      if (currentPage.value > 1) currentPage.value--;
-    }
-
-    function nextPage() {
-      if (currentPage.value < totalPages.value) currentPage.value++;
-    }
-  
-      const products = computed(() => store.state.products);
-      const categories = computed(() => store.state.categories);
-  
-      const filteredProducts = computed(() => {
-        let result = products.value;
-        if (selectedCategory.value) {
-          result = result.filter(p => p.category === selectedCategory.value);
-        }
-        if (sortBy.value === 'price_asc') {
-          result = [...result].sort((a, b) => a.price - b.price);
-        } else if (sortBy.value === 'price_desc') {
-          result = [...result].sort((a, b) => b.price - a.price);
-        }
-        return result;
-      });
-  
-     
-      function sortProducts() {
-        // This function is called when the sort order changes
-        // The sorting is handled by the computed property
-      }
-  
-      function addToCart(product) {
-        store.dispatch('addToCart', product);
-      }
-  
-      onMounted(() => {
-        store.dispatch('fetchProducts');
-        store.dispatch('fetchCategories');
-      });
-
-
-    // const filteredProducts = computed(() => {
-    //   let result = products.value;
+    const filteredProducts = computed(() => {
+      let result = products.value;
       
       // Apply search filter
       if (searchQuery.value) {
@@ -124,26 +76,51 @@
       }
       
       return result;
-    },
-  
-      return :{
-        selectedCategory,
-        sortBy,
-        categories,
-        filteredProducts,
-        filterProducts,
-        sortProducts,
-        addToCart,
-        paginatedProducts,
+    });
+
+    const paginatedProducts = computed(() => {
+      const start = (currentPage.value - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      return filteredProducts.value.slice(start, end);
+    });
+
+    const totalPages = computed(() => 
+      Math.ceil(filteredProducts.value.length / itemsPerPage)
+    );
+
+    function prevPage() {
+      if (currentPage.value > 1) currentPage.value--;
+    }
+
+    function nextPage() {
+      if (currentPage.value < totalPages.value) currentPage.value++;
+    }
+
+    function addToCart(product) {
+      store.dispatch('addToCart', product);
+    }
+
+    onMounted(() => {
+      store.dispatch('fetchProducts');
+      store.dispatch('fetchCategories');
+    });
+
+    return {
+      selectedCategory,
+      sortBy,
+      categories,
+      filteredProducts,
+      paginatedProducts,
       currentPage,
       totalPages,
       prevPage,
-      nextPage
-      },
-    
-  
+      nextPage,
+      addToCart,
+      searchQuery
+    };
   }
-  </script>
+}
+</script>
   
   <style scoped>
   .product-list {
