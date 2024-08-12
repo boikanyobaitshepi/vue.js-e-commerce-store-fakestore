@@ -47,31 +47,7 @@
     const itemsPerPage = 12;
 
     const searchQuery = ref('');
-    const filteredProducts = computed(() => {
-      let result = products.value;
-      
-      // Apply search filter
-      if (searchQuery.value) {
-        const query = searchQuery.value.toLowerCase();
-        result = result.filter(product => 
-          product.title.toLowerCase().includes(query) ||
-          product.description.toLowerCase().includes(query) ||
-          product.category.toLowerCase().includes(query)
-        );
-      }
-      
-      // Apply category filter
-      if (selectedCategory.value) {
-        result = result.filter(p => p.category === selectedCategory.value);
-      }
-      
-      // Apply sorting
-      if (sortBy.value === 'price_asc') {
-        result = [...result].sort((a, b) => a.price - b.price);
-      } else if (sortBy.value === 'price_desc') {
-        result = [...result].sort((a, b) => b.price - a.price);
-      }
-      
+    
     const paginatedProducts = computed(() => {
       const start = (currentPage.value - 1) * itemsPerPage;
       const end = start + itemsPerPage;
@@ -106,11 +82,7 @@
         return result;
       });
   
-      function filterProducts() {
-        // This function is called when the category changes
-        // The filtering is handled by the computed property
-      }
-  
+     
       function sortProducts() {
         // This function is called when the sort order changes
         // The sorting is handled by the computed property
@@ -124,8 +96,37 @@
         store.dispatch('fetchProducts');
         store.dispatch('fetchCategories');
       });
+
+
+    // const filteredProducts = computed(() => {
+    //   let result = products.value;
+      
+      // Apply search filter
+      if (searchQuery.value) {
+        const query = searchQuery.value.toLowerCase();
+        result = result.filter(product => 
+          product.title.toLowerCase().includes(query) ||
+          product.description.toLowerCase().includes(query) ||
+          product.category.toLowerCase().includes(query)
+        );
+      }
+      
+      // Apply category filter
+      if (selectedCategory.value) {
+        result = result.filter(p => p.category === selectedCategory.value);
+      }
+      
+      // Apply sorting
+      if (sortBy.value === 'price_asc') {
+        result = [...result].sort((a, b) => a.price - b.price);
+      } else if (sortBy.value === 'price_desc') {
+        result = [...result].sort((a, b) => b.price - a.price);
+      }
+      
+      return result;
+    },
   
-      return {
+      return :{
         selectedCategory,
         sortBy,
         categories,
@@ -137,9 +138,10 @@
       currentPage,
       totalPages,
       prevPage,
-      nextPage,
-      };
-    }
+      nextPage
+      },
+    
+  
   }
   </script>
   
@@ -179,14 +181,5 @@
 
 .pagination button {
   margin: 0 10px;
-}
-.search-bar {
-  margin-bottom: 20px;
-}
-
-.search-bar input {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
 }
   </style>
