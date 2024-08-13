@@ -1,38 +1,40 @@
-<template>
-    <header
-      @mousemove="onMousemove"
-      :style="{ backgroundColor: `hsl(${x}, 80%, 50%)` }"
-    >
-      <nav>
-        <ul>
-          <!-- <li><router-link to="/"><i class="fas fa-home"></i> Home</router-link></li> -->
-          <li><router-link to="/"><i class="fas fa-store"></i> Home</router-link></li>
-          <li><router-link to="/cart"><i class="fas fa-shopping-cart"></i> Cart ({{ cartItemCount }})</router-link></li>
-          <li><router-link to="/wishlist"><i class="fas fa-heart"></i> Wishlist</router-link></li>
-          <li v-if="!isLoggedIn">
-            <a href="#" @click.prevent="showModal = 'login'">
-              <i class="fas fa-sign-in-alt"></i> Login
-            </a>
-          </li>
-          <li v-if="!isLoggedIn">
-            <a href="#" @click.prevent="showModal = 'signup'">
-              <i class="fas fa-user-plus"></i> Sign Up
-            </a>
-          </li>
-          <li v-else>
-            <a href="#" @click.prevent="logout">
-              <i class="fas fa-sign-out-alt"></i> Logout
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </header>
+Copy<template>
+  <header
+    @mousemove="onMousemove"
+    :style="{ backgroundColor: `hsl(${x}, 80%, 50%)` }"
+  >
+    <nav>
+      <ul>
+        <li><router-link to="/"><i class="fas fa-store"></i> Home</router-link></li>
+        <li><router-link to="/cart"><i class="fas fa-shopping-cart"></i> Cart ({{ cartItemCount }})</router-link></li>
+        <li><router-link to="/wishlist"><i class="fas fa-heart"></i> Wishlist</router-link></li>
+        <li v-if="!isLoggedIn">
+          <a href="#" @click.prevent="showModal = 'login'">
+            <i class="fas fa-sign-in-alt"></i> Login
+          </a>
+        </li>
+        <li v-if="!isLoggedIn">
+          <a href="#" @click.prevent="showModal = 'signup'">
+            <i class="fas fa-user-plus"></i> Sign Up
+          </a>
+        </li>
+        <li v-else>
+          <a href="#" @click.prevent="logout">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </a>
+        </li>
+        <li>
+          <ThemeToggle />
+        </li>
+      </ul>
+    </nav>
+  </header>
   
     <main>
       <router-view></router-view>
     </main>
   
-    <div v-if="showModal === 'login'" class="modal">
+    <!-- <div v-if="showModal === 'login'" class="modal">
       <div class="modal-content">
         <span class="close-button" @click="showModal = null">&times;</span>
         <h2>Login</h2>
@@ -42,7 +44,7 @@
           <button type="submit">Login</button>
         </form>
       </div>
-    </div>
+    </div> -->
   
  
   </template>
@@ -51,8 +53,12 @@
   import { ref, computed } from 'vue';
   import { useStore } from 'vuex';
   import { useRouter } from 'vue-router';
+  import ThemeToogle from './ThemeToogle.vue';
   
   export default {
+    components: {
+    ThemeToogle  // Add this line
+  },
     setup() {
       const store = useStore();
       const router = useRouter();
@@ -60,10 +66,13 @@
       const showModal = ref(null);
       const loginForm = ref({ username: '', password: '' });
       const signupForm = ref({ username: '', email: '', password: '' });
+      // const store = useStore();
   
     //   const isLoggedIn = computed(() => store.state.auth.isLoggedIn);
     //   const cartItemCount = computed(() => store.state.cart.items.length);
-  
+    onMounted(() => {
+      store.dispatch('initTheme');  // Initialize theme
+    });
       function onMousemove(e) {
         x.value = e.clientX;
       }
@@ -196,4 +205,13 @@ main {
   button:hover {
     background-color: #45a049;
   }
+  .theme-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: #fff;
+  padding: 0;
+  margin: 0;
+}
   </style>

@@ -8,6 +8,7 @@
       <router-link to="/login">Login</router-link>
     </nav> -->
     <Header/>
+    <ThemeToogle/>
     <router-view></router-view>
   </div>
 </template>
@@ -15,6 +16,7 @@
 <script>
 // import Home from './views/Home.vue';
 import Header from './components/Header.vue';
+import ThemeToogle from './components/ThemeToogle.vue';
 // import Home from './views/Home.vue';
 // export default {
 //   name: 'App'
@@ -38,10 +40,21 @@ import Header from './components/Header.vue';
 //     };
 //   }
 // };
+
 export default {
-name: 'App',
-   components: {
+  name:'App',
+  components:{
     Header
-  }
+  },
+  components: {
+    ThemeToogle
+  },
+  // setup() {
+  //   const store = useStore()
+
+  //   onMounted(() => {
+  //     store.dispatch('initTheme')
+  //   })
+  // }
 }
 </script>

@@ -16,6 +16,7 @@ export default createStore({
     loading: false,
     error: null,
     user: null,
+    theme: localStorage.getItem('theme') || 'light'
   },
   mutations: {
     // Auth mutations
@@ -62,6 +63,11 @@ export default createStore({
       SET_USER(state, user) {
         state.user = user;
       },
+      setTheme(state, theme) {
+        state.theme = theme
+        localStorage.setItem('theme', theme)
+        document.body.setAttribute('data-theme', theme)
+      }
     
   },
   actions: {
@@ -147,7 +153,16 @@ export default createStore({
       logout({ commit }) {
         commit('SET_USER', null);
         localStorage.removeItem('user');
-      }, 
+      },
+      initTheme({ commit }) {
+        const theme = localStorage.getItem('theme') || 'light'
+        commit('setTheme', theme)
+      },
+      toggleTheme({ commit, state }) {
+        const newTheme = state.theme === 'light' ? 'dark' : 'light'
+        commit('setTheme', newTheme)
+      }
+      
       
   },
   getters: {
