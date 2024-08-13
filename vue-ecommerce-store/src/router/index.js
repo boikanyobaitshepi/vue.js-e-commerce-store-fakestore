@@ -4,9 +4,14 @@ import Cart from '../components/Cart.vue'
 import ProductDetails from '../components/ProductDetails.vue'
 import Wishlist from '../components/Wishlist.vue'
 import Checkout from '../components/Checkout.vue'
-import Register from '../components/Register.vue'
+// import Register from '../components/Register.vue'
 import ProductList from '../components/ProductList.vue'
 import  Header from '../components/Header.vue'
+import Login from '../components/Login.vue'
+import PayPalCallback from '../components/PayPalCallback.vue'
+import OrderConfirmation from '../components/OrderConfirmation.vue'
+import PaymentCancelled from '../components/PaymentCancelled.vue'
+import PaymentFailed from '../components/PaymentFailed.vue'
 
 const routes = [
   // {
@@ -40,11 +45,12 @@ const routes = [
     name: 'Checkout',
     component: Checkout
   },
-  {
-    path: '/register',
-    name: 'Register',
-    component: Register
-  }
+
+  { path: '/login', component: Login },
+  { path: '/paypal-callback', component: PayPalCallback },
+  { path: '/order-confirmation', component: OrderConfirmation },
+  { path: '/payment-failed', component: PaymentFailed },
+  { path: '/payment-cancelled', component: PaymentCancelled },
 ]
 
 const router = createRouter({

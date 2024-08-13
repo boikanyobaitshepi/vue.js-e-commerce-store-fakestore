@@ -44,18 +44,7 @@
       </div>
     </div>
   
-    <div v-else-if="showModal === 'signup'" class="modal">
-      <div class="modal-content">
-        <span class="close-button" @click="showModal = null">&times;</span>
-        <h2>Sign Up</h2>
-        <form @submit.prevent="signup">
-          <input v-model="signupForm.username" type="text" placeholder="Username" required>
-          <input v-model="signupForm.email" type="email" placeholder="Email" required>
-          <input v-model="signupForm.password" type="password" placeholder="Password" required>
-          <button type="submit">Sign Up</button>
-        </form>
-      </div>
-    </div>
+ 
   </template>
   
   <script>

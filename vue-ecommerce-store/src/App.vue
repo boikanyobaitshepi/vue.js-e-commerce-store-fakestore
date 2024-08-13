@@ -1,10 +1,12 @@
 <template>
   <div id="app">
-    <nav>
+    <!-- <nav>
+      <router-link to="/" v-if="!isLoggedIn">Home</router-link>
       <router-link to="/">Home</router-link> |
-      <!-- <Home/> -->
-      <!-- <router-link to="/login">Login</router-link> -->
-    </nav>
+      <a href="#" @click.prevent="handleLogout" v-if="isLoggedIn">Log Out</a>
+      <Home/>
+      <router-link to="/login">Login</router-link>
+    </nav> -->
     <Header/>
     <router-view></router-view>
   </div>
@@ -16,5 +18,30 @@ import Header from './components/Header.vue';
 // import Home from './views/Home.vue';
 // export default {
 //   name: 'App'
-// }
+// // }
+// export default {
+//   setup() {
+//     const router = useRouter();
+
+//     const isLoggedIn = computed(() => {
+//       return !!localStorage.getItem('token');
+//     });
+
+//     const handleLogout = () => {
+//       localStorage.removeItem('token');
+//       router.push('/');
+//     };
+
+//     return {
+//       isLoggedIn,
+//       handleLogout
+//     };
+//   }
+// };
+export default {
+name: 'App',
+   components: {
+    Header
+  }
+}
 </script>
