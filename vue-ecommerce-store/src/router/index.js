@@ -1,10 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
-// import Home from '../views/Home.vue'
 import Cart from '../components/Cart.vue'
 import ProductDetails from '../components/ProductDetails.vue'
 import Wishlist from '../components/Wishlist.vue'
 import Checkout from '../components/Checkout.vue'
-// import Register from '../components/Register.vue'
 import ProductList from '../components/ProductList.vue'
 import  Header from '../components/Header.vue'
 import Login from '../components/Login.vue'
@@ -54,7 +52,7 @@ const routes = [
 ]
 
 const router = createRouter({
-  // Use an empty string as the base URL if you're not using environment variables
+
   history: createWebHistory(''),
   routes
 })

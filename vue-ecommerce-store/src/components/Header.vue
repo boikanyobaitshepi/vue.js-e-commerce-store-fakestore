@@ -1,64 +1,55 @@
-Copy<template>
+<template>
   <header
     @mousemove="onMousemove"
     :style="{ backgroundColor: `hsl(${x}, 80%, 50%)` }"
   >
-    <nav>
-      <ul>
-        <li><router-link to="/"><i class="fas fa-store"></i> Home</router-link></li>
-        <li><router-link to="/cart"><i class="fas fa-shopping-cart"></i> Cart ({{ cartItemCount }})</router-link></li>
-        <li><router-link to="/wishlist"><i class="fas fa-heart"></i> Wishlist</router-link></li>
-        <li v-if="!isLoggedIn">
-          <a href="#" @click.prevent="showModal = 'login'">
-            <i class="fas fa-sign-in-alt"></i> Login
-          </a>
-        </li>
-        <li v-if="!isLoggedIn">
-          <a href="#" @click.prevent="showModal = 'signup'">
-            <i class="fas fa-user-plus"></i> Sign Up
-          </a>
-        </li>
-        <li v-else>
-          <a href="#" @click.prevent="logout">
-            <i class="fas fa-sign-out-alt"></i> Logout
-          </a>
-        </li>
-        <li>
-          <ThemeToggle />
-        </li>
-      </ul>
-    </nav>
+    <div class="header-content">
+      <nav>
+        <ul>
+          <li><router-link to="/"><i class="fas fa-store"></i> Home</router-link></li>
+          <li><router-link to="/cart"><i class="fas fa-shopping-cart"></i> Cart ({{ cartItemCount }})</router-link></li>
+          <li><router-link to="/wishlist"><i class="fas fa-heart"></i> Wishlist</router-link></li>
+          <li v-if="!isLoggedIn">
+            <a href="#" @click.prevent="showModal = 'login'">
+              <i class="fas fa-sign-in-alt"></i> Login
+            </a>
+          </li>
+          <li v-if="!isLoggedIn">
+            <a href="#" @click.prevent="showModal = 'signup'">
+              <i class="fas fa-user-plus"></i> Sign Up
+            </a>
+          </li>
+          <li v-else>
+            <a href="#" @click.prevent="logout">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <button @click="toggleTheme" class="theme-toggle" :aria-label="themeButtonLabel">
+        <i :class="themeIcon"></i>
+      </button>
+    </div>
   </header>
   
     <main>
       <router-view></router-view>
     </main>
-  
-    <!-- <div v-if="showModal === 'login'" class="modal">
-      <div class="modal-content">
-        <span class="close-button" @click="showModal = null">&times;</span>
-        <h2>Login</h2>
-        <form @submit.prevent="login">
-          <input v-model="loginForm.username" type="text" placeholder="Username" required>
-          <input v-model="loginForm.password" type="password" placeholder="Password" required>
-          <button type="submit">Login</button>
-        </form>
-      </div>
-    </div> -->
+
   
  
   </template>
   
   <script>
-  import { ref, computed } from 'vue';
+  import { ref, computed, onMounted } from 'vue';
   import { useStore } from 'vuex';
   import { useRouter } from 'vue-router';
-  import ThemeToogle from './ThemeToogle.vue';
+  // import ThemeToogle from './ThemeToogle.vue';
   
   export default {
-    components: {
-    ThemeToogle  // Add this line
-  },
+  //   components: {
+  //   ThemeToggle  
+  // },
     setup() {
       const store = useStore();
       const router = useRouter();
@@ -66,16 +57,15 @@ Copy<template>
       const showModal = ref(null);
       const loginForm = ref({ username: '', password: '' });
       const signupForm = ref({ username: '', email: '', password: '' });
-      // const store = useStore();
+      
   
-    //   const isLoggedIn = computed(() => store.state.auth.isLoggedIn);
-    //   const cartItemCount = computed(() => store.state.cart.items.length);
-    onMounted(() => {
-      store.dispatch('initTheme');  // Initialize theme
-    });
+   
       function onMousemove(e) {
         x.value = e.clientX;
       }
+      function toggleTheme() {
+      store.dispatch('toggleTheme');
+    }
   
       async function login() {
         try {
@@ -101,18 +91,23 @@ Copy<template>
         store.dispatch('auth/logout');
         router.push('/');
       }
-  
+      onMounted(() => {
+      store.dispatch('initTheme');  // Initialize theme
+    });
       return {
         x,
         onMousemove,
         showModal,
         loginForm,
-        signupForm,
+        // signupForm,
         // isLoggedIn,
         // cartItemCount,
         login,
         signup,
         logout,
+        // themeIcon,
+        toggleTheme,
+
       };
     },
   };
@@ -213,5 +208,11 @@ main {
   color: #fff;
   padding: 0;
   margin: 0;
+
+}
+
+.theme-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
 }
   </style>
