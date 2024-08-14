@@ -44,12 +44,12 @@
   import { ref, computed, onMounted } from 'vue';
   import { useStore } from 'vuex';
   import { useRouter } from 'vue-router';
-  // import ThemeToogle from './ThemeToogle.vue';
+  import ThemeToggle from './ThemeToggle.vue';
   
   export default {
-  //   components: {
-  //   ThemeToggle  
-  // },
+    components: {
+    ThemeToggle  
+  },
     setup() {
       const store = useStore();
       const router = useRouter();

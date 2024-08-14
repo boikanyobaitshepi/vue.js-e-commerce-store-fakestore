@@ -85,8 +85,8 @@ export default createStore({
     },
     async signup({ commit }, userData) {
       try {
-        // Note: Fake Store API doesn't have a real signup endpoint, so we're simulating it
-        await new Promise(resolve => setTimeout(resolve, 1000)) // Simulate API call
+
+        await new Promise(resolve => setTimeout(resolve, 1000))
         commit('SET_LOGGED_IN', true)
         commit('SET_USER', { username: userData.username })
         return { message: 'Signup successful' }
@@ -135,8 +135,6 @@ export default createStore({
       },
       // async login({ commit }, credentials) {
       //   try {
-      //     // In a real app, you'd make an API call here
-      //     // For now, we'll simulate a successful login
       //     await new Promise(resolve => setTimeout(resolve, 1000));
       //     const user = {
       //       id: Date.now(),
