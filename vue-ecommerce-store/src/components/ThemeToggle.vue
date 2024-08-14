@@ -1,4 +1,4 @@
-
+<!-- 
 <template>
     <button @click="toggleTheme" class="theme-toggle" :aria-label="buttonLabel">
       <span v-if="currentTheme === 'light'">🌙</span>
@@ -38,4 +38,5 @@
     cursor: pointer;
     font-size: 1.5rem;
   }
-  </style>
+  </style> -->
+  <template></template> 

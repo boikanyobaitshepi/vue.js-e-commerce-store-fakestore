@@ -14,11 +14,6 @@
               <i class="fas fa-sign-in-alt"></i> Login
             </a>
           </li>
-          <li v-if="!isLoggedIn">
-            <a href="#" @click.prevent="showModal = 'signup'">
-              <i class="fas fa-user-plus"></i> Sign Up
-            </a>
-          </li>
           <li v-else>
             <a href="#" @click.prevent="logout">
               <i class="fas fa-sign-out-alt"></i> Logout
@@ -26,9 +21,9 @@
           </li>
         </ul>
       </nav>
-      <button @click="toggleTheme" class="theme-toggle" :aria-label="themeButtonLabel">
+      <!-- <button @click="toggleTheme" class="theme-toggle" :aria-label="themeButtonLabel">
         <i :class="themeIcon"></i>
-      </button>
+      </button> -->
     </div>
   </header>
   
@@ -44,11 +39,11 @@
   import { ref, computed, onMounted } from 'vue';
   import { useStore } from 'vuex';
   import { useRouter } from 'vue-router';
-  import ThemeToggle from './ThemeToggle.vue';
+  // import ThemeToggle from './ThemeToggle.vue';
   
   export default {
     components: {
-    ThemeToggle  
+    // ThemeToggle  
   },
     setup() {
       const store = useStore();
@@ -63,9 +58,9 @@
       function onMousemove(e) {
         x.value = e.clientX;
       }
-      function toggleTheme() {
-      store.dispatch('toggleTheme');
-    }
+      // function toggleTheme() {
+      // store.dispatch('toggleTheme');
+    // }
   
       async function login() {
         try {
@@ -106,7 +101,7 @@
         // signup,
         logout,
         // themeIcon,
-        toggleTheme,
+        // toggleTheme,
 
       };
     },
@@ -200,7 +195,7 @@ main {
   button:hover {
     background-color: #45a049;
   }
-  .theme-toggle {
+  /* .theme-toggle {
   background: none;
   border: none;
   cursor: pointer;
@@ -214,5 +209,5 @@ main {
 .theme-toggle:hover {
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 50%;
-}
+} */
   </style>

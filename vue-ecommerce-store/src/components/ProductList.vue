@@ -5,7 +5,7 @@
       <input v-model="searchQuery" type="text" placeholder="Search products...">
     </div>
       <div class="filters">
-        <select v-model="selectedCategory" @change="filterProducts">
+        <select v-model="selectedCategory" @change="filteredProducts">
           <option value="">All Categories</option>
           <option v-for="category in categories" :key="category" :value="category">
             {{ category }}
@@ -39,8 +39,6 @@ export default {
     const store = useStore();
     const selectedCategory = ref('');
     const sortBy = ref('default');
-    const currentPage = ref(1);
-    const itemsPerPage = 12;
     const searchQuery = ref('');
 
     const products = computed(() => store.state.products);
@@ -106,11 +104,6 @@ export default {
       sortBy,
       categories,
       filteredProducts,
-      // paginatedProducts,
-      // currentPage,
-      // totalPages,
-      // prevPage,
-      // nextPage,
       addToCart,
       searchQuery
     };
