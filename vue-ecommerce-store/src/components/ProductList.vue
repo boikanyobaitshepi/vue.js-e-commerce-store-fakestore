@@ -11,7 +11,7 @@
             {{ category }}
           </option>
         </select>
-        <select v-model="sortBy" @change="sortProducts">
+        <select v-model="sortBy" @change="resetPage">
           <option value="default">Default</option>
           <option value="price_asc">Price: Low to High</option>
           <option value="price_desc">Price: High to Low</option>
@@ -26,11 +26,7 @@
           <button @click="addToCart(product)">Add to Cart</button>
         </div>
       </div>
-      <div class="pagination">
-      <button @click="prevPage" :disabled="currentPage === 1">Previous</button>
-      <span>Page {{ currentPage }} of {{ totalPages }}</span>
-      <button @click="nextPage" :disabled="currentPage === totalPages">Next</button>
-    </div>
+     
     </div>
   </template>
   
@@ -78,23 +74,23 @@ export default {
       return result;
     });
 
-    const paginatedProducts = computed(() => {
-      const start = (currentPage.value - 1) * itemsPerPage;
-      const end = start + itemsPerPage;
-      return filteredProducts.value.slice(start, end);
-    });
+    // const paginatedProducts = computed(() => {
+    //   const start = (currentPage.value - 1) * itemsPerPage;
+    //   const end = start + itemsPerPage;
+    //   return filteredProducts.value.slice(start, end);
+    // });
 
-    const totalPages = computed(() => 
-      Math.ceil(filteredProducts.value.length / itemsPerPage)
-    );
+    // const totalPages = computed(() => 
+    //   Math.ceil(filteredProducts.value.length / itemsPerPage)
+    // );
 
-    function prevPage() {
-      if (currentPage.value > 1) currentPage.value--;
-    }
+    // function prevPage() {
+    //   if (currentPage.value > 1) currentPage.value--;
+    // }
 
-    function nextPage() {
-      if (currentPage.value < totalPages.value) currentPage.value++;
-    }
+    // function nextPage() {
+    //   if (currentPage.value < totalPages.value) currentPage.value++;
+    // }
 
     function addToCart(product) {
       store.dispatch('addToCart', product);
@@ -110,11 +106,11 @@ export default {
       sortBy,
       categories,
       filteredProducts,
-      paginatedProducts,
-      currentPage,
-      totalPages,
-      prevPage,
-      nextPage,
+      // paginatedProducts,
+      // currentPage,
+      // totalPages,
+      // prevPage,
+      // nextPage,
       addToCart,
       searchQuery
     };
