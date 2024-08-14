@@ -56,7 +56,7 @@
       const x = ref(0);
       const showModal = ref(null);
       const loginForm = ref({ username: '', password: '' });
-      const signupForm = ref({ username: '', email: '', password: '' });
+      // const signupForm = ref({ username: '', email: '', password: '' });
       
   
    
@@ -77,22 +77,22 @@
         }
       }
   
-      async function signup() {
-        try {
-          await store.dispatch('auth/signup', signupForm.value);
-          showModal.value = null;
-          router.push('/');
-        } catch (error) {
-          console.error('Signup failed:', error);
-        }
-      }
+      // async function signup() {
+      //   try {
+      //     await store.dispatch('auth/signup', signupForm.value);
+      //     showModal.value = null;
+      //     router.push('/');
+      //   } catch (error) {
+      //     console.error('Signup failed:', error);
+      //   }
+      // }
   
       function logout() {
         store.dispatch('auth/logout');
         router.push('/');
       }
       onMounted(() => {
-      store.dispatch('initTheme');  // Initialize theme
+      store.dispatch('initTheme');
     });
       return {
         x,
@@ -103,7 +103,7 @@
         // isLoggedIn,
         // cartItemCount,
         login,
-        signup,
+        // signup,
         logout,
         // themeIcon,
         toggleTheme,
