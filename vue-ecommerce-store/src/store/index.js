@@ -16,7 +16,8 @@ export default createStore({
     loading: false,
     error: null,
     user: null,
-    theme: localStorage.getItem('theme') || 'light'
+    theme: localStorage.getItem('theme') || 'light',
+    comparisonlist: [],
   },
   mutations: {
     // Auth mutations
@@ -67,7 +68,18 @@ export default createStore({
         state.theme = theme
         localStorage.setItem('theme', theme)
         document.body.setAttribute('data-theme', theme)
-      }
+      },
+      ADD_TO_COMPARISON(state, product) {
+        if (state.comparisonList.length < 4 && !state.comparisonList.some(item => item.id === product.id)) {
+          state.comparisonList.push(product);
+        }
+      },
+      REMOVE_FROM_COMPARISON(state, productId) {
+        state.comparisonList = state.comparisonList.filter(item => item.id !== productId);
+      },
+      CLEAR_COMPARISON(state) {
+        state.comparisonList = [];
+      },
     
   },
   actions: {
@@ -159,7 +171,17 @@ export default createStore({
       toggleTheme({ commit, state }) {
         const newTheme = state.theme === 'light' ? 'dark' : 'light'
         commit('setTheme', newTheme)
-      }
+      },
+      actions: {
+    addToComparison({ commit }, product) {
+      commit('ADD_TO_COMPARISON', product);
+    },
+    removeFromComparison({ commit }, productId) {
+      commit('REMOVE_FROM_COMPARISON', productId);
+    },
+    clearComparison({ commit }) {
+      commit('CLEAR_COMPARISON');
+    },
       
       
   },
@@ -176,5 +198,7 @@ export default createStore({
     wishlistItemCount: (state) => {
         return state.wishlistItems.length;
       },
+      comparisonList: state => state.comparisonList,
   }
+}
 })

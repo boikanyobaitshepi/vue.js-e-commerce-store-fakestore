@@ -1,6 +1,6 @@
 <template>
     <div class="product-list">
-      <h1>Products</h1>
+      <h1>Our Products</h1>
       <div class="search-bar">
       <input v-model="searchQuery" type="text" placeholder="Search products...">
     </div>

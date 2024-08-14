@@ -57,7 +57,8 @@
         console.log('Add to wishlist:', product);
       }
       function submitReview() {
-      // In a real application, you would send this to your backend API
+      store.dispatch('submitReview', newReview.value);
+
       const review = {
         id: Date.now(), // Use a real ID in production
         user: 'Current User', // Use the actual logged-in user's name
@@ -77,6 +78,21 @@
       
       // Update the product in the store
       store.commit('UPDATE_PRODUCT', product.value);
+      // Check for duplicate reviews
+  const isDuplicate = product.value.reviews.some(
+    existingReview => 
+      existingReview.user === review.user && 
+      existingReview.comment === review.comment
+  );
+
+  if (!isDuplicate) {
+    product.value.reviews.push(review);
+    // Update the product in the store
+    store.commit('UPDATE_PRODUCT', product.value);
+  } else {
+    console.log('Duplicate review detected');
+    // Optionally, show a message to the user
+  }
     }
 
   
