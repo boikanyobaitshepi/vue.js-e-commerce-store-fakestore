@@ -171,17 +171,7 @@ export default createStore({
       toggleTheme({ commit, state }) {
         const newTheme = state.theme === 'light' ? 'dark' : 'light'
         commit('setTheme', newTheme)
-      },
-      actions: {
-    addToComparison({ commit }, product) {
-      commit('ADD_TO_COMPARISON', product);
-    },
-    removeFromComparison({ commit }, productId) {
-      commit('REMOVE_FROM_COMPARISON', productId);
-    },
-    clearComparison({ commit }) {
-      commit('CLEAR_COMPARISON');
-    },
+      }
       
       
   },
@@ -198,7 +188,5 @@ export default createStore({
     wishlistItemCount: (state) => {
         return state.wishlistItems.length;
       },
-      comparisonList: state => state.comparisonList,
   }
-}
 })

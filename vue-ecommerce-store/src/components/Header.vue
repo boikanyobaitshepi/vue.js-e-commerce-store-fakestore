@@ -7,7 +7,7 @@
       <nav>
         <ul>
           <li><router-link to="/"><i class="fas fa-store"></i> Home</router-link></li>
-          <li><router-link to="/cart"><i class="fas fa-shopping-cart"></i> Cart ({{ cartItemCount }})</router-link></li>
+          <li><router-link to="/cart"><i class="fas fa-shopping-cart"></i> Cart </router-link></li>
           <li><router-link to="/wishlist"><i class="fas fa-heart"></i> Wishlist</router-link></li>
           <button v-if="isLoggedIn" @click="logout">Logout</button>
           <li v-if="!isLoggedIn">

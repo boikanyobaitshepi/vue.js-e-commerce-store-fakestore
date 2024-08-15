@@ -1,89 +1,222 @@
 <template>
-    <form @submit.prevent="handleSubmit">
-      <div>
-        <label for="username">Username:</label>
+  <div class="login-container">
+    <div v-if="isLoggedIn" class="logged-in">
+      <p>Welcome, {{ username }}!</p>
+      <button @click="handleLogout" class="logout-button">Log Out</button>
+    </div>
+    <form v-else @submit.prevent="handleSubmit" class="login-form">
+      <h2>Login</h2>
+      <div class="form-group">
+        <label for="username">Username</label>
         <input
           type="text"
           id="username"
-          v-model="username"
+          v-model.trim="username"
           required
+          autocomplete="username"
+          placeholder="Enter your username"
+          class="form-input"
         />
       </div>
-      <div>
-        <label for="password">Password:</label>
-        <input
-          :type="showPassword ? 'text' : 'password'"
-          id="password"
-          v-model="password"
-          required
-        />
-        <button type="button" @click="togglePassword">
-          {{ showPassword ? 'Hide' : 'Show' }}
-        </button>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="password-input">
+          <input
+            :type="showPassword ? 'text' : 'password'"
+            id="password"
+            v-model.trim="password"
+            required
+            autocomplete="current-password"
+            placeholder="Enter your password"
+            class="form-input"
+          />
+          <button type="button" @click="togglePassword" class="toggle-password">
+            <i :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'" aria-label="Toggle password visibility"></i>
+          </button>
+        </div>
       </div>
-      <p v-if="error" style="color: red;">{{ error }}</p>
-      <button type="submit" :disabled="isLoading">
-        {{ isLoading ? 'Logging in...' : 'Log In' }}
+      <p v-if="error" class="error-message">{{ error }}</p>
+      <button type="submit" :disabled="isLoading" class="submit-button">
+        <span v-if="isLoading" class="loader"></span>
+        <span v-else>Log In</span>
       </button>
     </form>
-  </template>
-  
-  <script>
-  import { ref } from 'vue';
-  import { useRouter, useRoute } from 'vue-router';
-  import axios from 'axios';
-  
-  export default {
-    setup() {
-      const username = ref('');
-      const password = ref('');
-      const showPassword = ref(false);
-      const isLoading = ref(false);
-      const error = ref('');
-  
-      const router = useRouter();
-      const route = useRoute();
-  
-      const togglePassword = () => {
-        showPassword.value = !showPassword.value;
-      };
-  
-      const handleSubmit = async () => {
-        if (!username.value || !password.value) {
-          error.value = 'Username and password are required';
-          return;
-        }
-  
-        isLoading.value = true;
-        error.value = '';
-  
-        try {
-          const response = await axios.post('https://fakestoreapi.com/auth/login', 
-            { username: username.value, password: password.value },
-            { headers: { 'Content-Type': 'application/json' } }
-          );
-  
-          localStorage.setItem('token', response.data.token);
+  </div>
+</template>
+
+<style scoped>
+.login-container {
+  max-width: 300px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.logged-in {
+  text-align: center;
+}
+
+.logout-button {
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background-color: #3e8e41;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+}
+
+.password-input {
+  position: relative;
+}
+
+.toggle-password {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.toggle-password i {
+  font-size: 18px;
+  color: #666;
+}
+
+.toggle-password:hover i {
+  color: #333;
+}
+
+.submit-button {
+  background-color: #009688;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.submit-button:hover {
+  background-color: #00796b;
+}
+
+.loader {
+  border: 4px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 4px solid #009688;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+</style>
+<script>
+import { ref } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import axios from 'axios';
+
+export default {
+  setup() {
+    const username = ref('');
+    const password = ref('');
+    const showPassword = ref(false);
+    const isLoading = ref(false);
+    const error = ref('');
+    const isLoggedIn = ref(false);
+
+    const router = useRouter();
+    const route = useRoute();
+
+    const togglePassword = () => {
+      showPassword.value = !showPassword.value;
+    };
+
+    const handleSubmit = async () => {
+      if (!username.value || !password.value) {
+        error.value = 'Username and password are required';
+        return;
+      }
+
+      isLoading.value = true;
+
+      try {
+        const response = await axios.post('/api/login', {
+          username: username.value,
+          password: password.value
+        });
+
+        if (response.data.success) {
+          isLoggedIn.value = true;
+          username.value = '';
+          password.value = '';
+          error.value = '';
           isLoading.value = false;
-  
-          // Redirect to the previous page or home
-          const from = route.query.redirect || '/';
-          router.replace(from);
-        } catch (err) {
+          router.push('/dashboard');
+        } else {
+          error.value = 'Invalid username or password';
           isLoading.value = false;
-          error.value = 'Login failed. Please check your credentials.';
         }
-      };
-  
-      return {
-        username,
-        password,
-        showPassword,
-        isLoading,
-        error,
-        togglePassword,
-        handleSubmit
-      };
-    }
-  };
-  </script>
+      } catch (error) {
+        error.value = 'An error occurred. Please try again.';
+        isLoading.value = false;
+      }
+    };
+
+    const handleLogout = () => {
+      isLoggedIn.value = false;
+      router.push('/login');
+    };
+
+    return {
+      username,
+      password,
+      showPassword,
+      isLoading,
+      error,
+      isLoggedIn,
+      togglePassword,
+      handleSubmit,
+      handleLogout
+    };
+  }
+}
+</script>

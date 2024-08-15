@@ -37,9 +37,11 @@
       }
   
       function checkout() {
-        // Implement checkout functionality
-        console.log('Checkout');
-      }
+  // Implement checkout functionality
+  console.log('Checkout');
+  this.$router.push({ name: 'Checkout' });
+}
+
   
       return {
         cartItems,

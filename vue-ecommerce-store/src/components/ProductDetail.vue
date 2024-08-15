@@ -29,6 +29,9 @@
         <button type="submit">Submit Review</button>
       </form>
     </div>
+    <button @click="addToComparison" :disabled="isInComparison">
+    {{ isInComparison ? 'In Comparison' : 'Add to Comparison' }}
+  </button>
   </template>
   
   <script>
@@ -37,10 +40,19 @@
   import { useRoute } from 'vue-router';
   
   export default {
-    setup() {
+    props: ['product'],
+    setup(props) {
       const store = useStore();
       const route = useRoute();
-  
+   
+      const isInComparison = computed(() => 
+      store.getters.comparisonList.some(item => item.id === props.product.id)
+    );
+
+    const addToComparison = () => {
+      store.dispatch('addToComparison', props.product);
+    };
+
       const productId = computed(() => parseInt(route.params.id));
       const product = computed(() => store.getters.getProductById(productId.value));
 

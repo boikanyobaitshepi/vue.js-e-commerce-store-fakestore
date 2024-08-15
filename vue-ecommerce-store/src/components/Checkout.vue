@@ -125,35 +125,35 @@ export default {
   }
 }
 </script>
-  
-  <style scoped>
-  .checkout {
-    padding: 20px;
-  }
-  
-  .checkout-item {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-  }
-  
-  .total {
-    margin-top: 20px;
-    text-align: right;
-  }
-  
-  form {
-    margin-top: 20px;
-  }
-  
-  input {
-    display: block;
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 5px;
-  }
-  
-  button {
-    margin-top: 20px;
-  }
-  </style>
+
+<style scoped>
+.checkout {
+  padding: 20px;
+}
+
+.checkout-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.total {
+  margin-top: 20px;
+  text-align: right;
+}
+
+form {
+  margin-top: 20px;
+}
+
+input {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 5px;
+}
+
+button {
+  margin-top: 20px;
+}
+</style>
