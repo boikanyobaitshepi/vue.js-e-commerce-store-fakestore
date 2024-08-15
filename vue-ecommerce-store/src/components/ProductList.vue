@@ -18,13 +18,16 @@
         </select>
       </div>
       <div class="products-grid">
-        <div v-for="product in filteredProducts" :key="product.id" class="product-card">
-          <img :src="product.image" :alt="product.title">
-          <h3>{{ product.title }}</h3>
-          <p>{{ product.price.toFixed(2) }}</p>
-          <router-link :to="{ name: 'ProductDetail', params: { id: product.id } }">View Details</router-link>
-          <button @click="addToCart(product)">Add to Cart</button>
-        </div>
+      <div v-for="product in filteredProducts" :key="product.id" class="product-card">
+        <img :src="product.image" :alt="product.title">
+        <h3>{{ product.title }}</h3>
+        <p>${{ product.price.toFixed(2) }}</p>
+        <router-link :to="{ name: 'ProductDetail', params: { id: product.id } }">View Details</router-link>
+        <button @click="addToCart(product)" class="add-to-cart-btn">
+          <span class="btn-text">Add to Cart</span>
+          <span class="btn-icon">🛒</span>
+        </button>
+      </div>
       </div>
      
     </div>
@@ -148,4 +151,67 @@ export default {
 .pagination button {
   margin: 0 10px;
 }
-  </style>
+.add-to-cart-btn {
+  background: linear-gradient(45deg, #ff6b6b, #feca57);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 10px;
+  width: 100%;
+}
+
+.add-to-cart-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.btn-text {
+  margin-right: 5px;
+}
+
+.btn-icon {
+  font-size: 18px;
+}
+
+/* Adjust product card layout */
+.product-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.product-card img {
+  max-width: 100%;
+  height: 150px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+.product-card h3 {
+  margin-bottom: 5px;
+  font-size: 16px;
+}
+
+.product-card p {
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #e44d26;
+}
+
+.product-card a {
+  margin-bottom: 10px;
+  text-decoration: none;
+  color: #4CAF50;
+  font-weight: bold;
+}
+</style>

@@ -14,27 +14,10 @@
         <strong>Total: ${{ cartTotal.toFixed(2) }}</strong>
       </div>
       <form @submit.prevent="processOrder">
-        <h2>Shipping Information</h2>
-        <input v-model="shippingInfo.name" placeholder="Full Name" required>
-        <input v-model="shippingInfo.address" placeholder="Address" required>
-        <input v-model="shippingInfo.city" placeholder="City" required>
-        <input v-model="shippingInfo.zipCode" placeholder="Zip Code" required>
-        <h2>Payment Method</h2>
-        <div>
-          <input type="radio" id="credit-card" value="credit-card" v-model="paymentMethod">
-          <label for="credit-card">Credit Card</label>
-        </div>
-        <div>
-          <input type="radio" id="paypal" value="paypal" v-model="paymentMethod">
-          <label for="paypal">PayPal</label>
-        </div>
-        <div v-if="paymentMethod === 'credit-card'">
-          <h3>Credit Card Information</h3>
-          <input v-model="paymentInfo.cardNumber" placeholder="Card Number" required>
-          <input v-model="paymentInfo.expiryDate" placeholder="MM/YY" required>
-          <input v-model="paymentInfo.cvv" placeholder="CVV" required>
-        </div>
-        <button type="submit">Place Order</button>
+        <!-- ... (rest of the form remains the same) ... -->
+        <button type="submit" :disabled="isProcessing">
+          {{ isProcessing ? 'Processing...' : 'Place Order' }}
+        </button>
       </form>
     </div>
   </div>
@@ -46,12 +29,13 @@ import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 
 export default {
+  name: 'Checkout',
   setup() {
     const store = useStore();
     const router = useRouter();
 
-    const cartItems = computed(() => store.state.cartItems);
-    const cartTotal = computed(() => store.getters.cartTotal);
+    const cartItems = computed(() => store.state.cart.items);
+    const cartTotal = computed(() => store.getters['cart/total']);
 
     const shippingInfo = ref({
       name: '',
@@ -67,25 +51,33 @@ export default {
     });
 
     const paymentMethod = ref('credit-card');
+    const isProcessing = ref(false);
 
     async function processOrder() {
-      if (paymentMethod.value === 'paypal') {
-        // Redirect to PayPal
-        await initiatePayPalPayment();
-      } else {
-        // Process credit card payment
-        console.log('Processing credit card payment', {
-          items: cartItems.value,
-          total: cartTotal.value,
-          shipping: shippingInfo.value,
-          payment: paymentInfo.value,
-        });
+      isProcessing.value = true;
+      try {
+        if (paymentMethod.value === 'paypal') {
+          await initiatePayPalPayment();
+        } else {
+          // Process credit card payment
+          console.log('Processing credit card payment', {
+            items: cartItems.value,
+            total: cartTotal.value,
+            shipping: shippingInfo.value,
+            payment: paymentInfo.value,
+          });
 
-        // Clear the cart
-        cartItems.value.forEach(item => store.dispatch('removeFromCart', item.id));
+          // Clear the cart
+          await store.dispatch('cart/clearCart');
 
-        // Redirect to a confirmation page
-        router.push('/order-confirmation');
+          // Redirect to a confirmation page
+          router.push('/order-confirmation');
+        }
+      } catch (error) {
+        console.error('Error processing order:', error);
+        // Handle error (e.g., show error message to user)
+      } finally {
+        isProcessing.value = false;
       }
     }
 
@@ -104,6 +96,10 @@ export default {
           }),
         });
 
+        if (!response.ok) {
+          throw new Error('Failed to create PayPal order');
+        }
+
         const { orderID } = await response.json();
 
         // Redirect to PayPal checkout
@@ -121,6 +117,7 @@ export default {
       paymentInfo,
       paymentMethod,
       processOrder,
+      isProcessing,
     };
   }
 }

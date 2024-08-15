@@ -11,6 +11,8 @@ import OrderConfirmation from '../components/OrderConfirmation.vue'
 import PaymentCancelled from '../components/PaymentCancelled.vue'
 import PaymentFailed from '../components/PaymentFailed.vue'
 import ComparisonPage from '../components/ComparisonPage.vue'
+// import ProductComparison from '../components/ProductComparison.vue'
+import DiscountedProductDetail from '../components/DiscountedProductDetail.vue'
 
 const routes = [
   // {
@@ -56,11 +58,15 @@ const routes = [
     component: ComparisonPage,
     meta: { requiresAuth: true },
   },
+  {
+    path: '/discounted-product/:id',
+    name: 'DiscountedProductDetail',
+    component: DiscountedProductDetail
+  },
 ]
 
 const router = createRouter({
-
-  history: createWebHistory(''),
+  history: createWebHistory('process.env.BASE_URL'),
   routes
 })
 router.beforeEach((to, from, next) => {

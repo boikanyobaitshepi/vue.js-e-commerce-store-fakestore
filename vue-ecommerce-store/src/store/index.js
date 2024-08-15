@@ -11,6 +11,7 @@ export default createStore({
     cartItems: [],
     // Products
     products: [],
+    discountedProducts: [],
     categories: [],
     wishlistItems: [],
     loading: false,
@@ -80,6 +81,12 @@ export default createStore({
       CLEAR_COMPARISON(state) {
         state.comparisonList = [];
       },
+      SET_PRODUCTS(state, products) {
+        state.products = products;
+      },
+      SET_DISCOUNTED_PRODUCTS(state, discountedProducts) {
+        state.discountedProducts = discountedProducts;
+      },
     
   },
   actions: {
@@ -128,6 +135,34 @@ export default createStore({
         commit('SET_ERROR', error.message)
       }
       commit('SET_LOADING', false)
+      
+    },
+    applyDiscounts({ commit, state }) {
+      const allProducts = [...state.products];
+      const discountedProducts = [];
+      
+      for (let i = 0; i < 5; i++) {
+        if (allProducts.length === 0) break;
+        
+        const randomIndex = Math.floor(Math.random() * allProducts.length);
+        const product = allProducts.splice(randomIndex, 1)[0];
+        
+        const discountPercentage = Math.floor(Math.random() * 50) + 10; // 10% to 60% discount
+        const discountedPrice = product.price * (1 - discountPercentage / 100);
+        
+        const endDate = new Date();
+        endDate.setDate(endDate.getDate() + Math.floor(Math.random() * 14) + 1); // Sale ends in 1 to 14 days
+        
+        discountedProducts.push({
+          ...product,
+          discountPercentage,
+          discountedPrice,
+          originalPrice: product.price,
+          saleEndDate: endDate
+        });
+      }
+      
+      commit('SET_DISCOUNTED_PRODUCTS', discountedProducts);
     },
     async fetchCategories({ commit }) {
       commit('SET_LOADING', true)
