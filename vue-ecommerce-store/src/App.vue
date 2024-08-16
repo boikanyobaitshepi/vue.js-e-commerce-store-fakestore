@@ -1,10 +1,10 @@
 <template>
-  <div id="app">
+  <!-- <div id="app"> -->
  
     <Header/>
     <ThemeToggle/>
     <router-view></router-view>
-  </div>
+  <!-- </div> -->
 </template>
 
 <script>

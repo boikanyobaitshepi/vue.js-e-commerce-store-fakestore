@@ -15,22 +15,20 @@
               <i class="fas fa-sign-in-alt"></i> Login
             </a>
           </li>
-          <li v-else>
-            <a href="#" @click.prevent="logout">
-              <i class="fas fa-sign-out-alt"></i> Logout
-            </a>
-          </li>
+          <li v-if="isLoggedIn">
+          <a href="#" @click.prevent="logout">Logout</a>
+        </li>
         </ul>
       </nav>
       <!-- <button @click="toggleTheme" class="theme-toggle" :aria-label="themeButtonLabel">
         <i :class="themeIcon"></i>
       </button> -->
     </div>
+    
+    <LoginForm v-if="showModal === 'login'" />
   </header>
   
-    <main>
-      <router-view></router-view>
-    </main>
+
 
   
  
@@ -40,11 +38,13 @@
   import { ref, computed, onMounted } from 'vue';
   import { useStore } from 'vuex';
   import { useRouter } from 'vue-router';
+  import Login from './Login.vue';
   // import ThemeToggle from './ThemeToggle.vue';
   
   export default {
     components: {
-    // ThemeToggle  
+    // ThemeToggle
+      Login
   },
     setup() {
       const store = useStore();
