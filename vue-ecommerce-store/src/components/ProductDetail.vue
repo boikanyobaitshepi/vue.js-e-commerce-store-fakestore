@@ -1,5 +1,9 @@
 <template>
     <div v-if="product" class="product-detail">
+      <div v-if="isLoading" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <p>Loading ...</p>
+    </div>
       <img :src="product.image" :alt="product.title">
       <h1>{{ product.title }}</h1>
       <p>{{ product.description }}</p>
@@ -44,6 +48,8 @@
     setup(props) {
       const store = useStore();
       const route = useRoute();
+      const isLoading= ref(true);
+
    
       const isInComparison = computed(() => 
       store.getters.comparisonList.some(item => item.id === props.product.id)
@@ -114,6 +120,7 @@
         addToWishlist,
         newReview,
         submitReview,
+        isLoading,
 
       };
     }

@@ -1,6 +1,10 @@
 <template>
     <div class="product-list">
       <h1>Our Products</h1>
+      <div v-if="isLoading" class="loading-overlay">
+      <div class="loading-spinner"></div>
+      <p>Loading products...</p>
+    </div>
       <div class="search-bar">
       <input v-model="searchQuery" type="text" placeholder="Search products...">
     </div>
@@ -21,6 +25,7 @@
       <div v-for="product in filteredProducts" :key="product.id" class="product-card">
         <img :src="product.image" :alt="product.title">
         <h3>{{ product.title }}</h3>
+        <p>{{ product.category }}</p>
         <p>${{ product.price.toFixed(2) }}</p>
         <router-link :to="{ name: 'ProductDetail', params: { id: product.id } }">View Details</router-link>
         <button @click="addToCart(product)" class="add-to-cart-btn">
@@ -43,6 +48,7 @@ export default {
     const selectedCategory = ref('');
     const sortBy = ref('default');
     const searchQuery = ref('');
+    const isLoading = ref(true);
 
     const products = computed(() => store.state.products);
     const categories = computed(() => store.state.categories);
@@ -75,31 +81,25 @@ export default {
       return result;
     });
 
-    // const paginatedProducts = computed(() => {
-    //   const start = (currentPage.value - 1) * itemsPerPage;
-    //   const end = start + itemsPerPage;
-    //   return filteredProducts.value.slice(start, end);
-    // });
-
-    // const totalPages = computed(() => 
-    //   Math.ceil(filteredProducts.value.length / itemsPerPage)
-    // );
-
-    // function prevPage() {
-    //   if (currentPage.value > 1) currentPage.value--;
-    // }
-
-    // function nextPage() {
-    //   if (currentPage.value < totalPages.value) currentPage.value++;
-    // }
-
     function addToCart(product) {
       store.dispatch('addToCart', product);
     }
 
-    onMounted(() => {
-      store.dispatch('fetchProducts');
-      store.dispatch('fetchCategories');
+    // onMounted(() => {
+    //   store.dispatch('fetchProducts');
+    //   store.dispatch('fetchCategories');
+    // });
+    onMounted(async () => {
+      try {
+        await Promise.all([
+          store.dispatch('fetchProducts'),
+          store.dispatch('fetchCategories')
+        ]);
+      } catch (error) {
+        console.error('Error loading data:', error);
+      } finally {
+        isLoading.value = false;
+      }
     });
 
     return {
@@ -108,7 +108,8 @@ export default {
       categories,
       filteredProducts,
       addToCart,
-      searchQuery
+      searchQuery,
+      isLoading,
     };
   }
 }
@@ -213,5 +214,32 @@ export default {
   text-decoration: none;
   color: #4CAF50;
   font-weight: bold;
+}
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.loading-spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 </style>
