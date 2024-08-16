@@ -17,7 +17,7 @@ export default createStore({
     loading: false,
     error: null,
     user: null,
-    theme: localStorage.getItem('theme') || 'light',
+    theme: 'light',
     comparisonlist: [],
   },
   mutations: {
@@ -223,5 +223,6 @@ export default createStore({
     wishlistItemCount: (state) => {
         return state.wishlistItems.length;
       },
+      isLightTheme: state => state.theme === 'light'
   }
 })

@@ -18,14 +18,16 @@
           <li v-if="isLoggedIn">
           <a href="#" @click.prevent="logout">Logout</a>
         </li>
+        <li>
+          <ThemeToggle />
+        </li>
         </ul>
       </nav>
       <!-- <button @click="toggleTheme" class="theme-toggle" :aria-label="themeButtonLabel">
         <i :class="themeIcon"></i>
       </button> -->
     </div>
-    
-    <LoginForm v-if="showModal === 'login'" />
+    <LoginForm v-if="showModal === 'login'" @close="showModal = null" />
   </header>
   
 
@@ -54,7 +56,7 @@
       const loginForm = ref({ username: '', password: '' });
       // const signupForm = ref({ username: '', email: '', password: '' });
       
-  
+      const isLoggedIn = computed(() => store.getters['auth/isLoggedIn']);
    
       function onMousemove(e) {
         x.value = e.clientX;
@@ -96,7 +98,7 @@
         showModal,
         loginForm,
         // signupForm,
-        // isLoggedIn,
+        isLoggedIn,
         // cartItemCount,
         login,
         // signup,
@@ -196,7 +198,7 @@ main {
   button:hover {
     background-color: #45a049;
   }
-  /* .theme-toggle {
+  .theme-toggle {
   background: none;
   border: none;
   cursor: pointer;
@@ -210,5 +212,5 @@ main {
 .theme-toggle:hover {
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 50%;
-} */
+} 
   </style>

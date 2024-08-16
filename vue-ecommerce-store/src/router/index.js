@@ -13,6 +13,8 @@ import PaymentFailed from '../components/PaymentFailed.vue'
 import ComparisonPage from '../components/ComparisonPage.vue'
 // import ProductComparison from '../components/ProductComparison.vue'
 import DiscountedProductDetail from '../components/DiscountedProductDetail.vue'
+import Home from '../components/Home.vue'
+import ThemeToggle from '../components/ThemeToggle.vue'
 
 const routes = [
   // {
@@ -47,7 +49,26 @@ const routes = [
     component: Checkout
   },
 
-  { path: '/login', component: Login },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login
+  },
+  {
+    path:'/themetoggle',
+    name: 'ThemeToggle',
+    component: ThemeToggle
+  },
+
+
+
+  {
+    path: '/checkout',
+    name: 'Checkout',
+    component: Checkout
+  },
+
+  // { path: '/login', component: Login },
   { path: '/paypal-callback', component: PayPalCallback },
   { path: '/order-confirmation', component: OrderConfirmation },
   { path: '/payment-failed', component: PaymentFailed },
@@ -63,6 +84,7 @@ const routes = [
     name: 'DiscountedProductDetail',
     component: DiscountedProductDetail
   },
+  { path: '/', name: 'Home', component: Home },
 ]
 
 const router = createRouter({
