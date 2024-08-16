@@ -1,8 +1,8 @@
 <template>
     <div v-if="product" class="product-detail">
       <div v-if="isLoading" class="loading-overlay">
-        <div class="loading-spinner"></div>
-        <p>Loading ...</p>
+      <div class="loading-spinner"></div>
+      <p>Loading product details...</p>
     </div>
       <img :src="product.image" :alt="product.title">
       <h1>{{ product.title }}</h1>
@@ -60,7 +60,7 @@
     };
 
       const productId = computed(() => parseInt(route.params.id));
-      const product = computed(() => store.getters.getProductById(productId.value));
+      // const product = computed(() => store.getters.getProductById(productId.value));
 
       const newReview = ref({
       rating: null,

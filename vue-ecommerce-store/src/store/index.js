@@ -1,7 +1,9 @@
 // store/index.js
 import { createStore } from 'vuex'
 import axios from 'axios'
+import jwtDecode from 'jwt-decode'
 
+Vue.use(Vuex)
 export default createStore({
   state: {
     // Auth
@@ -29,12 +31,51 @@ export default createStore({
       state.user = user
     },
     // Cart mutations
-    ADD_TO_CART(state, item) {
-      state.cartItems.push(item)
+    ADD_TO_CART(state, { userId, product }) {
+      if (!state.cart[userId]) {
+        Vue.set(state.cart, userId, [])
+      }
+      const existingProduct = state.cart[userId].find(item => item.id === product.id)
+      if (existingProduct) {
+        existingProduct.quantity += 1
+      } else {
+        state.cart[userId].push({ ...product, quantity: 1 })
+      }
+      localStorage.setItem('cart', JSON.stringify(state.cart))
     },
-    REMOVE_FROM_CART(state, itemId) {
-      state.cartItems = state.cartItems.filter(item => item.id !== itemId)
+    REMOVE_FROM_CART(state, { userId, productId }) {
+      state.cart[userId] = state.cart[userId].filter(item => item.id !== productId)
+      localStorage.setItem('cart', JSON.stringify(state.cart))
     },
+    UPDATE_CART_ITEM_QUANTITY(state, { userId, productId, quantity }) {
+      const item = state.cart[userId].find(item => item.id === productId)
+      if (item) {
+        item.quantity = quantity
+        localStorage.setItem('cart', JSON.stringify(state.cart))
+      }
+    },
+    CLEAR_CART(state, userId) {
+      Vue.set(state.cart, userId, [])
+      localStorage.setItem('cart', JSON.stringify(state.cart))
+    },
+    LOAD_CART(state) {
+      const cart = localStorage.getItem('cart')
+      if (cart) {
+        state.cart = JSON.parse(cart)
+      }
+    },
+    ADD_TO_COMPARISON(state, product) {
+      if (state.comparisonList.length < 4 && !state.comparisonList.some(item => item.id === product.id)) {
+        state.comparisonList.push(product)
+      }
+    },
+    REMOVE_FROM_COMPARISON(state, productId) {
+      state.comparisonList = state.comparisonList.filter(item => item.id !== productId)
+    },
+    CLEAR_COMPARISON(state) {
+      state.comparisonList = []
+    },
+  
     // Product mutations
     SET_PRODUCTS(state, products) {
       state.products = products
@@ -62,30 +103,25 @@ export default createStore({
           state.products[index] = updatedProduct;
         }
       },
-      SET_USER(state, user) {
-        state.user = user;
-      },
+      // SET_USER(state, user) {
+      //   state.user = user;
+      // },
       setTheme(state, theme) {
         state.theme = theme
         localStorage.setItem('theme', theme)
         document.body.setAttribute('data-theme', theme)
       },
-      ADD_TO_COMPARISON(state, product) {
-        if (state.comparisonList.length < 4 && !state.comparisonList.some(item => item.id === product.id)) {
-          state.comparisonList.push(product);
-        }
-      },
-      REMOVE_FROM_COMPARISON(state, productId) {
-        state.comparisonList = state.comparisonList.filter(item => item.id !== productId);
-      },
-      CLEAR_COMPARISON(state) {
-        state.comparisonList = [];
-      },
+    
       SET_PRODUCTS(state, products) {
         state.products = products;
       },
       SET_DISCOUNTED_PRODUCTS(state, discountedProducts) {
         state.discountedProducts = discountedProducts;
+      },
+      RESET_FILTERS(state) {
+        state.selectedCategory = '';
+        state.sortBy = 'default';
+        state.searchQuery = '';
       },
     
   },
@@ -102,18 +138,18 @@ export default createStore({
         throw error
       }
     },
-    async signup({ commit }, userData) {
-      try {
+    // async signup({ commit }, userData) {
+    //   try {
 
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        commit('SET_LOGGED_IN', true)
-        commit('SET_USER', { username: userData.username })
-        return { message: 'Signup successful' }
-      } catch (error) {
-        commit('SET_ERROR', error.message)
-        throw error
-      }
-    },
+    //     await new Promise(resolve => setTimeout(resolve, 1000))
+    //     commit('SET_LOGGED_IN', true)
+    //     commit('SET_USER', { username: userData.username })
+    //     return { message: 'Signup successful' }
+    //   } catch (error) {
+    //     commit('SET_ERROR', error.message)
+    //     throw error
+    //   }
+    // },
     logout({ commit }) {
       commit('SET_LOGGED_IN', false)
       commit('SET_USER', null)
@@ -206,14 +242,58 @@ export default createStore({
       toggleTheme({ commit, state }) {
         const newTheme = state.theme === 'light' ? 'dark' : 'light'
         commit('setTheme', newTheme)
-      }
-      
+      },
+      resetFilters({ commit }) {
+        commit('RESET_FILTERS');
+      },
+      login({ commit }, token) {
+        const user = jwtDecode(token)
+        commit('SET_USER', user)
+        localStorage.setItem('token', token)
+      },
+      logout({ commit }) {
+        commit('SET_USER', null)
+        commit('CLEAR_CART', null)
+        localStorage.removeItem('token')
+      },
+      addToCart({ commit, state }, product) {
+        if (state.user) {
+          commit('ADD_TO_CART', { userId: state.user.id, product })
+        }
+      },
+      removeFromCart({ commit, state }, productId) {
+        if (state.user) {
+          commit('REMOVE_FROM_CART', { userId: state.user.id, productId })
+        }
+      },
+      updateCartItemQuantity({ commit, state }, { productId, quantity }) {
+        if (state.user) {
+          commit('UPDATE_CART_ITEM_QUANTITY', { userId: state.user.id, productId, quantity })
+        }
+      },
+      clearCart({ commit, state }) {
+        if (state.user) {
+          commit('CLEAR_CART', state.user.id)
+        }
+      },
+      loadCart({ commit }) {
+        commit('LOAD_CART')
+      },
+      addToComparison({ commit }, product) {
+        commit('ADD_TO_COMPARISON', product)
+      },
+      removeFromComparison({ commit }, productId) {
+        commit('REMOVE_FROM_COMPARISON', productId)
+      },
+      clearComparison({ commit }) {
+        commit('CLEAR_COMPARISON')
+      }, 
       
   },
   getters: {
-    getProductById: (state) => (id) => {
-      return state.products.find(product => product.id === id)
-    },
+    // getProductById: (state) => (id) => {
+    //   return state.products.find(product => product.id === id)
+    // },
     cartItemCount: (state) => {
       return state.cartItems.length
     },
@@ -223,6 +303,16 @@ export default createStore({
     wishlistItemCount: (state) => {
         return state.wishlistItems.length;
       },
-      isLightTheme: state => state.theme === 'light'
+      isLightTheme: state => state.theme === 'light',
+      isLoggedIn: state => !!state.user,
+    cartItems: state => state.user ? state.cart[state.user.id] || [] : [],
+    cartTotal: (state, getters) => {
+      return getters.cartItems.reduce((total, item) => total + (item.price * item.quantity), 0)
+    },
+    cartItemCount: (state, getters) => {
+      return getters.cartItems.reduce((count, item) => count + item.quantity, 0)
+    },
+    comparisonList: state => state.comparisonList
+  
   }
 })

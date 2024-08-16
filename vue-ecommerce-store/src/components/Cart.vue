@@ -10,11 +10,19 @@
         <div>
           <h3>{{ item.title }}</h3>
           <p>Price: ${{ item.price.toFixed(2) }}</p>
+          <p>Quantity: 
+            <button @click="updateQuantity(item.id, item.quantity - 1)" :disabled="item.quantity === 1">-</button>
+            {{ item.quantity }}
+            <button @click="updateQuantity(item.id, item.quantity + 1)">+</button>
+          </p>
+          <button @click="removeFromCart(item.id)" class="remove-btn">Remove</button>
+        </div>
           <button @click="removeFromCart(item.id)" class="remove-btn">Remove</button>
         </div>
       </div>
       <div class="cart-total">
         <h3>Total: ${{ cartTotal.toFixed(2) }}</h3>
+        <button @click="clearCart" class="clear-btn">Clear Cart</button>
         <button @click="checkout" class="checkout-btn">Checkout</button>
       </div>
     </div>
@@ -22,28 +30,43 @@
       <span class="btn-text">Add to Cart</span>
       <span class="btn-icon">🛒</span>
     </button>
-  </div>
+  <!-- </div> -->
 </template>
 
 <script>
 import { computed } from 'vue';
 import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 
 export default {
   setup() {
     const store = useStore();
+    const router = useRouter();
 
-    const cartItems = computed(() => store.state.cartItems);
+    const cartItems = computed(() => store.getters.cartItems);
     const cartTotal = computed(() => store.getters.cartTotal);
 
     function removeFromCart(itemId) {
       store.dispatch('removeFromCart', itemId);
+    }
+    function updateQuantity(itemId, quantity) {
+      if (quantity > 0) {
+        store.dispatch('updateCartItemQuantity', { productId: itemId, quantity });
+      }
     }
 
     function checkout() {
       console.log('Checkout');
       this.$router.push({ name: 'Checkout' });
     }
+    function clearCart() {
+      store.dispatch('clearCart');
+    }
+    function checkout() {
+      console.log('Checkout');
+      router.push({ name: 'Checkout' });
+    }
+
 
     function addToCart() {
       // Implement add to cart functionality
@@ -55,6 +78,8 @@ export default {
       cartTotal,
       removeFromCart,
       checkout,
+      updateQuantity,
+      clearCart,
       addToCart,
     };
   }
@@ -130,5 +155,15 @@ export default {
 
 .btn-icon {
   font-size: 24px;
+}
+.clear-btn {
+  background-color: #ff9800;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 16px;
+  margin-right: 10px;
 }
 </style>

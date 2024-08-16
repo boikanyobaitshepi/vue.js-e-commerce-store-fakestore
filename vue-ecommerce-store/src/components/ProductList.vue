@@ -20,6 +20,8 @@
           <option value="price_asc">Price: Low to High</option>
           <option value="price_desc">Price: High to Low</option>
         </select>
+        <button @click="resetFilters" class="reset-filters-btn">Reset Filters</button>
+        
       </div>
       <div class="products-grid">
       <div v-for="product in filteredProducts" :key="product.id" class="product-card">
@@ -49,7 +51,7 @@ export default {
     const sortBy = ref('default');
     const searchQuery = ref('');
     const isLoading = ref(true);
-
+    const resetFilters = ref('');
     const products = computed(() => store.state.products);
     const categories = computed(() => store.state.categories);
 
@@ -70,6 +72,9 @@ export default {
       if (selectedCategory.value) {
         result = result.filter(p => p.category === selectedCategory.value);
       }
+      function resetFilters() {
+      store.dispatch('resetFilters');
+    }
       
       // Apply sorting
       if (sortBy.value === 'price_asc') {
@@ -110,6 +115,7 @@ export default {
       addToCart,
       searchQuery,
       isLoading,
+      resetFilters,
     };
   }
 }
@@ -241,5 +247,19 @@ export default {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+.reset-filters-btn {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+  margin-left: 10px;
+}
+
+.reset-filters-btn:hover {
+  background-color: #d32f2f;
 }
 </style>
