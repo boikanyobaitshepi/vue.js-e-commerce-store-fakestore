@@ -1,5 +1,5 @@
 <template>
-    <div class="product-list">
+    <div class="products">
       <h1>Our Products</h1>
       <div v-if="isLoading" class="loading-overlay">
       <div class="loading-spinner"></div>

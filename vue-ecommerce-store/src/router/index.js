@@ -15,6 +15,9 @@ import ComparisonPage from '../components/ComparisonPage.vue'
 import DiscountedProductDetail from '../components/DiscountedProductDetail.vue'
 import Home from '../components/Home.vue'
 import ThemeToggle from '../components/ThemeToggle.vue'
+// import { createRouter, createWebHistory } from 'vue-router'
+import store from '../store'
+// import Home from '../components/Home.vue'
 
 const routes = [
   // {
@@ -23,6 +26,11 @@ const routes = [
   //   component: Header
 
   // },
+  {
+    path: '/',
+    name: 'Home',
+    component: Home
+  },
   {
     path: '/',
     name: 'ProductList',
@@ -36,7 +44,8 @@ const routes = [
   {
     path: '/cart',
     name: 'Cart',
-    component: Cart
+    component: Cart,
+    meta: { requiresAuth: true }
   },
   {
     path: '/wishlist',
@@ -91,21 +100,43 @@ const router = createRouter({
   history: createWebHistory('process.env.BASE_URL'),
   routes
 })
+// router.beforeEach((to, from, next) => {
+//   const publicPages = ['/login', '/home'];
+//   const authRequired = !publicPages.includes(to.path);
+//   const loggedIn = localStorage.getItem('token');
+
+//   if (authRequired && !loggedIn) {
+//     return next('/login?redirect=' + to.path);
+//   }
+//   const isAuthenticated = localStorage.getItem('token');
+//   if (to.matched.some(record => record.meta.requiresAuth) && !isAuthenticated) {
+//     next({ name: 'Login', query: { redirect: to.fullPath } });
+//   } else {
+
+//   next();
+//   }
+// })
+// router.beforeEach((to, from, next) => {
+//   if (to.matched.some(record => record.meta.requiresAuth)) {
+//     if (!store.getters.isLoggedIn) {
+//       next({ name: 'Login' })
+//     } else {
+//       next()
+//     }
+//   } else {
+//     next()
+//   }
+// })
 router.beforeEach((to, from, next) => {
-  const publicPages = ['/login', '/home'];
-  const authRequired = !publicPages.includes(to.path);
-  const loggedIn = localStorage.getItem('token');
+  const isLoggedIn = store.getters['auth/isLoggedIn']
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth)
 
-  if (authRequired && !loggedIn) {
-    return next('/login?redirect=' + to.path);
-  }
-  const isAuthenticated = localStorage.getItem('token');
-  if (to.matched.some(record => record.meta.requiresAuth) && !isAuthenticated) {
-    next({ name: 'Login', query: { redirect: to.fullPath } });
+  if (requiresAuth && !isLoggedIn) {
+    next({ name: 'Login', query: { redirect: to.fullPath } })
   } else {
-
-  next();
+    next()
   }
 })
+
 
 export default router

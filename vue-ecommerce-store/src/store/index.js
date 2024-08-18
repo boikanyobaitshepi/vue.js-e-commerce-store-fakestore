@@ -1,13 +1,16 @@
 // store/index.js
 import { createStore } from 'vuex'
 import axios from 'axios'
-import jwtDecode from 'jwt-decode'
+import * as jwtDecode from 'jwt-decode'
+import router from '../router'
+// import router from '@/router'
 
-Vue.use(Vuex)
+// Vue.use(Vuex)
 export default createStore({
   state: {
     // Auth
     isLoggedIn: false,
+    token: localStorage.getItem('token') || null,
     user: null,
     // Cart
     cartItems: [],
@@ -19,13 +22,17 @@ export default createStore({
     loading: false,
     error: null,
     user: null,
-    theme: 'light',
+    theme: localStorage.getItem('theme') || 'light',
     comparisonlist: [],
+    // jwtDecode: [],
   },
   mutations: {
     // Auth mutations
     SET_LOGGED_IN(state, value) {
       state.isLoggedIn = value
+    },
+    SET_TOKEN(state, token) {
+      state.token = token;
     },
     SET_USER(state, user) {
       state.user = user
@@ -106,10 +113,10 @@ export default createStore({
       // SET_USER(state, user) {
       //   state.user = user;
       // },
-      setTheme(state, theme) {
-        state.theme = theme
-        localStorage.setItem('theme', theme)
-        document.body.setAttribute('data-theme', theme)
+      SET_THEME(state, theme) {
+        state.theme = theme;
+        localStorage.setItem('theme', theme);
+        document.body.setAttribute('data-theme', theme);
       },
     
       SET_PRODUCTS(state, products) {
@@ -123,33 +130,45 @@ export default createStore({
         state.sortBy = 'default';
         state.searchQuery = '';
       },
+      
     
   },
   actions: {
     // Auth actions
     async login({ commit }, credentials) {
-      try {
-        const response = await axios.post('https://fakestoreapi.com/auth/login', credentials)
-        commit('SET_LOGGED_IN', true)
-        commit('SET_USER', { username: credentials.username, token: response.data.token })
-        return response.data
-      } catch (error) {
-        commit('SET_ERROR', error.message)
-        throw error
+      const response = await fetch('https://fakestoreapi.com/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(credentials),
+      });
+      if (!response.ok) {
+        throw new Error('Login failed. Please check your credentials and try again.');
       }
+      const data = await response.json()
+        if (data.token) {
+          localStorage.setItem('token', data.token)
+          commit('SET_TOKEN', data.token)
+          commit('SET_USER', { username: credentials.username })
+          // Redirect to the intended page or home
+          const intendedPath = router.currentRoute.value.query.redirect || '/'
+          router.push(intendedPath)
+        } else {
+          throw new Error('Login failed')
+        }
+      }, catch (error) {
+        console.error('Login error:', error)
+        throw error
+      },
+    
+    logout({ commit }) {
+      localStorage.removeItem('token')
+      commit('SET_TOKEN', null)
+      commit('SET_USER', null)
+      router.push('/login')
     },
-    // async signup({ commit }, userData) {
-    //   try {
-
-    //     await new Promise(resolve => setTimeout(resolve, 1000))
-    //     commit('SET_LOGGED_IN', true)
-    //     commit('SET_USER', { username: userData.username })
-    //     return { message: 'Signup successful' }
-    //   } catch (error) {
-    //     commit('SET_ERROR', error.message)
-    //     throw error
-    //   }
-    // },
+    
+    
+ 
     logout({ commit }) {
       commit('SET_LOGGED_IN', false)
       commit('SET_USER', null)
@@ -200,6 +219,15 @@ export default createStore({
       
       commit('SET_DISCOUNTED_PRODUCTS', discountedProducts);
     },
+    async fetchProducts({ commit }) {
+      try {
+        const response = await fetch('https://fakestoreapi.com/products');
+        const products = await response.json();
+        commit('SET_PRODUCTS', products);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    },
     async fetchCategories({ commit }) {
       commit('SET_LOADING', true)
       try {
@@ -216,32 +244,17 @@ export default createStore({
       removeFromWishlist({ commit }, itemId) {
         commit('REMOVE_FROM_WISHLIST', itemId);
       },
-      // async login({ commit }, credentials) {
-      //   try {
-      //     await new Promise(resolve => setTimeout(resolve, 1000));
-      //     const user = {
-      //       id: Date.now(),
-      //       username: credentials.username,
-      //     };
-      //     commit('SET_USER', user);
-      //     localStorage.setItem('user', JSON.stringify(user));
-      //     return user;
-      //   } catch (error) {
-      //     console.error('Login failed:', error);
-      //     throw error;
-      //   }
-      
       logout({ commit }) {
         commit('SET_USER', null);
         localStorage.removeItem('user');
       },
       initTheme({ commit }) {
-        const theme = localStorage.getItem('theme') || 'light'
-        commit('setTheme', theme)
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        commit('SET_THEME', savedTheme);
       },
       toggleTheme({ commit, state }) {
-        const newTheme = state.theme === 'light' ? 'dark' : 'light'
-        commit('setTheme', newTheme)
+        const newTheme = state.theme === 'light' ? 'dark' : 'light';
+        commit('SET_THEME', newTheme);
       },
       resetFilters({ commit }) {
         commit('RESET_FILTERS');
@@ -288,8 +301,7 @@ export default createStore({
       clearComparison({ commit }) {
         commit('CLEAR_COMPARISON')
       }, 
-      
-  },
+    }, 
   getters: {
     // getProductById: (state) => (id) => {
     //   return state.products.find(product => product.id === id)
@@ -303,8 +315,9 @@ export default createStore({
     wishlistItemCount: (state) => {
         return state.wishlistItems.length;
       },
-      isLightTheme: state => state.theme === 'light',
-      isLoggedIn: state => !!state.user,
+      // isLightTheme: state => state.theme === 'light',
+      isLoggedIn: state => !!state.token,
+      currentUser: state => state.user,
     cartItems: state => state.user ? state.cart[state.user.id] || [] : [],
     cartTotal: (state, getters) => {
       return getters.cartItems.reduce((total, item) => total + (item.price * item.quantity), 0)
@@ -312,6 +325,7 @@ export default createStore({
     cartItemCount: (state, getters) => {
       return getters.cartItems.reduce((count, item) => count + item.quantity, 0)
     },
+    currentTheme: state => state.theme,
     comparisonList: state => state.comparisonList
   
   }

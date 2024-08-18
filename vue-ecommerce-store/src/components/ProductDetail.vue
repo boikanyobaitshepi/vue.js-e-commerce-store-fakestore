@@ -1,9 +1,5 @@
 <template>
     <div v-if="product" class="product-detail">
-      <div v-if="isLoading" class="loading-overlay">
-      <div class="loading-spinner"></div>
-      <p>Loading product details...</p>
-    </div>
       <img :src="product.image" :alt="product.title">
       <h1>{{ product.title }}</h1>
       <p>{{ product.description }}</p>
@@ -12,13 +8,16 @@
       <p>Rating: {{ product.rating.rate }} ({{ product.rating.count }} reviews)</p>
       <button @click="addToCart(product)">Add to Cart</button>
       <button @click="addToWishlist(product)">Add to Wishlist</button>
+      <button @click="addToComparison" :disabled="isInComparison">
+      {{ isInComparison ? 'In Comparison' : 'Add to Comparison' }}
+    </button>
     </div>
     <div v-else>
       Loading...
     </div>
     <div class="reviews">
       <h2>Reviews</h2>
-      <div v-if="product.reviews && product.reviews.length">
+      <div v-if="product && product.reviews && product.reviews.length">
         <div v-for="review in product.reviews" :key="review.id" class="review">
           <p><strong>{{ review.user }}</strong> - {{ review.date }}</p>
           <p>Rating: {{ review.rating }}/5</p>
@@ -33,9 +32,9 @@
         <button type="submit">Submit Review</button>
       </form>
     </div>
-    <button @click="addToComparison" :disabled="isInComparison">
+    <!-- <button @click="addToComparison" :disabled="isInComparison">
     {{ isInComparison ? 'In Comparison' : 'Add to Comparison' }}
-  </button>
+  </button> -->
   </template>
   
   <script>
@@ -48,8 +47,6 @@
     setup(props) {
       const store = useStore();
       const route = useRoute();
-      const isLoading= ref(true);
-
    
       const isInComparison = computed(() => 
       store.getters.comparisonList.some(item => item.id === props.product.id)
@@ -97,16 +94,20 @@
       // Update the product in the store
       store.commit('UPDATE_PRODUCT', product.value);
       // Check for duplicate reviews
-  const isDuplicate = product.value.reviews.some(
+  const isDuplicate = product.value.reviews?.some(
     existingReview => 
       existingReview.user === review.user && 
       existingReview.comment === review.comment
   );
 
   if (!isDuplicate) {
+    if (!product.value.reviews) {
+          product.value.reviews = [];
+        }
     product.value.reviews.push(review);
     // Update the product in the store
     store.commit('UPDATE_PRODUCT', product.value);
+    newReview.value = { rating: null, comment: '' };
   } else {
     console.log('Duplicate review detected');
     // Optionally, show a message to the user
@@ -120,7 +121,10 @@
         addToWishlist,
         newReview,
         submitReview,
-        isLoading,
+        addToComparison,
+      isInComparison,
+      newReview,
+      
 
       };
     }

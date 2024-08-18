@@ -11,6 +11,7 @@
 
 import Header from './components/Header.vue';
 import ThemeToggle from './components/ThemeToggle.vue';
+import './assets/style.css'
 
 
 
@@ -20,6 +21,13 @@ export default {
     Header,
     ThemeToggle,
   },
+  // setup() {
+  //   const store = useStore();
+
+  //   onMounted(() => {
+  //     store.dispatch('initTheme');
+  //   });
+  // },
  
 }
 </script>

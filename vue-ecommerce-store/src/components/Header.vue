@@ -7,9 +7,14 @@
       <nav>
         <ul>
           <li><router-link to="/"><i class="fas fa-store"></i> Home</router-link></li>
-          <li><router-link to="/cart"><i class="fas fa-shopping-cart"></i> Cart </router-link></li>
+          <li> <router-link to="/cart">
+      <i class="fas fa-shopping-cart"></i> Cart ({{ cartItemCount }})
+    </router-link></li>
           <li><router-link to="/wishlist"><i class="fas fa-heart"></i> Wishlist</router-link></li>
-          <button v-if="isLoggedIn" @click="logout">Logout</button>
+          <!-- <button v-if="isLoggedIn" @click="logout">Logout</button> -->
+          <li v-if="isLoggedIn">
+    <a href="#" @click.prevent="handleLogout">Logout</a>
+  </li>
           <li v-if="!isLoggedIn">
             <a href="#" @click.prevent="showModal = 'login'">
               <i class="fas fa-sign-in-alt"></i> Login
@@ -29,11 +34,6 @@
     </div>
     <LoginForm v-if="showModal === 'login'" @close="showModal = null" />
   </header>
-  
-
-
-  
- 
   </template>
   
   <script>
@@ -45,8 +45,7 @@
   
   export default {
     components: {
-    // ThemeToggle
-      Login
+      // Login
   },
     setup() {
       const store = useStore();
@@ -58,12 +57,12 @@
       
       const isLoggedIn = computed(() => store.getters['auth/isLoggedIn']);
    
+      const handleLogout = () => {
+      store.dispatch('auth/logout')
+    }
       function onMousemove(e) {
         x.value = e.clientX;
       }
-      // function toggleTheme() {
-      // store.dispatch('toggleTheme');
-    // }
   
       async function login() {
         try {
@@ -74,6 +73,8 @@
           console.error('Login failed:', error);
         }
       }
+
+    const cartItemCount = computed(() => store.getters.cartItemCount);
   
       // async function signup() {
       //   try {
@@ -85,10 +86,10 @@
       //   }
       // }
   
-      function logout() {
-        store.dispatch('auth/logout');
-        router.push('/');
-      }
+      // function logout() {
+      //   store.dispatch('auth/logout');
+      //   router.push('/');
+      // }
       onMounted(() => {
       store.dispatch('initTheme');
     });
@@ -96,13 +97,13 @@
         x,
         onMousemove,
         showModal,
-        loginForm,
+        login,
         // signupForm,
         isLoggedIn,
-        // cartItemCount,
+        cartItemCount,
         login,
         // signup,
-        logout,
+        handleLogout,
         // themeIcon,
         // toggleTheme,
 
