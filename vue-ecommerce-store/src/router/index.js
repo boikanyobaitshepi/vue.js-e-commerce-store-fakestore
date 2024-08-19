@@ -20,17 +20,6 @@ import store from '../store'
 // import Home from '../components/Home.vue'
 
 const routes = [
-  // {
-  //   path: '/',
-  //   name: 'Header',
-  //   component: Header
-
-  // },
-  // {
-  //   path: '/',
-  //   name: 'Home',
-  //   component: Home
-  // },
   {
     path: '/',
     name: 'ProductList',

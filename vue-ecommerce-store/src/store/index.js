@@ -3,7 +3,7 @@ import { createStore } from 'vuex'
 import axios from 'axios'
 import * as jwtDecode from 'jwt-decode'
 import router from '../router'
-
+// import router from '@/router'
 
 // Vue.use(Vuex)
 export default createStore({
@@ -12,7 +12,7 @@ export default createStore({
     isLoggedIn: false,
     token: localStorage.getItem('token') || null,
     user: null,
-    Cart: [],
+    // Cart
     cartItems: [],
     // Products
     products: [],
@@ -119,9 +119,9 @@ export default createStore({
         document.body.setAttribute('data-theme', theme);
       },
     
-      // SET_PRODUCTS(state, products) {
-      //   state.products = products;
-      // },
+      SET_PRODUCTS(state, products) {
+        state.products = products;
+      },
       SET_DISCOUNTED_PRODUCTS(state, discountedProducts) {
         state.discountedProducts = discountedProducts;
       },
@@ -174,26 +174,24 @@ export default createStore({
       commit('SET_USER', null)
     },
     // Cart actions
-    addToCart({ commit, state }, product) {
-      if (state.user) {
-        commit('ADD_TO_CART', { userId: state.user.id, product })
-      }
+    addToCart({ commit }, item) {
+      commit('ADD_TO_CART', item)
     },
     removeFromCart({ commit }, itemId) {
       commit('REMOVE_FROM_CART', itemId)
     },
     // Product actions
-    // async fetchProducts({ commit }) {
-    //   commit('SET_LOADING', true)
-    //   try {
-    //     const response = await axios.get('https://fakestoreapi.com/products')
-    //     commit('SET_PRODUCTS', response.data)
-    //   } catch (error) {
-    //     commit('SET_ERROR', error.message)
-    //   }
-    //   commit('SET_LOADING', false)
+    async fetchProducts({ commit }) {
+      commit('SET_LOADING', true)
+      try {
+        const response = await axios.get('https://fakestoreapi.com/products')
+        commit('SET_PRODUCTS', response.data)
+      } catch (error) {
+        commit('SET_ERROR', error.message)
+      }
+      commit('SET_LOADING', false)
       
-    // },
+    },
     applyDiscounts({ commit, state }) {
       const allProducts = [...state.products];
       const discountedProducts = [];
@@ -305,16 +303,19 @@ export default createStore({
       }, 
     }, 
   getters: {
-    // cartItemCount: (state) => {
-    //   return state.cartItems.length
+    // getProductById: (state) => (id) => {
+    //   return state.products.find(product => product.id === id)
     // },
+    cartItemCount: (state) => {
+      return state.cartItems.length
+    },
     cartTotal: (state) => {
       return state.cartItems.reduce((total, item) => total + item.price, 0)
     },
     wishlistItemCount: (state) => {
         return state.wishlistItems.length;
       },
-      // isLightTheme: state => state.theme === 'light',
+      
       isLoggedIn: state => !!state.token,
       currentUser: state => state.user,
     cartItems: state => state.user ? state.cart[state.user.id] || [] : [],

@@ -1,169 +1,61 @@
 <template>
-    <div v-if="product" class="product-detail">
-      <img :src="product.image" :alt="product.title">
-      <h1>{{ product.title }}</h1>
-      <p>{{ product.description }}</p>
-      <p>Price: ${{ product.price.toFixed(2) }}</p>
-      <p>Category: {{ product.category }}</p>
-      <p>Rating: {{ product.rating.rate }} ({{ product.rating.count }} reviews)</p>
-      <button @click="addToCart(product)">Add to Cart</button>
-      <button @click="addToWishlist(product)">Add to Wishlist</button>
-      <button @click="addToComparison" :disabled="isInComparison">
-      {{ isInComparison ? 'In Comparison' : 'Add to Comparison' }}
-    </button>
-    </div>
-    <div v-else>
-      Loading...
-    </div>
-    <div class="reviews">
-      <h2>Reviews</h2>
-      <div v-if="product && product.reviews && product.reviews.length">
-        <div v-for="review in product.reviews" :key="review.id" class="review">
-          <p><strong>{{ review.user }}</strong> - {{ review.date }}</p>
-          <p>Rating: {{ review.rating }}/5</p>
-          <p>{{ review.comment }}</p>
-        </div>
-      </div>
-      <div v-else>No reviews yet.</div>
-      <h3>Add a Review</h3>
-      <form @submit.prevent="submitReview">
-        <input v-model="newReview.rating" type="number" min="1" max="5" placeholder="Rating (1-5)" required>
-        <textarea v-model="newReview.comment" placeholder="Your review" required></textarea>
-        <button type="submit">Submit Review</button>
-      </form>
-    </div>
-    <!-- <button @click="addToComparison" :disabled="isInComparison">
-    {{ isInComparison ? 'In Comparison' : 'Add to Comparison' }}
-  </button> -->
-  </template>
-  
-  <script>
-  import { ref, computed } from 'vue';
-  import { useStore } from 'vuex';
-  import { useRoute } from 'vue-router';
-  
-  export default {
-    props: ['product'],
-    setup(props) {
-      const store = useStore();
-      const route = useRoute();
-   
-      const isInComparison = computed(() => 
-      store.getters.comparisonList.some(item => item.id === props.product.id)
-    );
+  <div v-if="product" class="product-detail">
+    <h2>{{ product.title }}</h2>
+    <img :src="product.image" :alt="product.title" class="product-image">
+    <p>{{ product.description }}</p>
+    <p>Price: ${{ product.price.toFixed(2) }}</p>
+    <p>Category: {{ product.category }}</p>
+    <p v-if="product.rating">Rating: {{ product.rating.rate }} ({{ product.rating.count }} reviews)</p>
+    <router-link to="/" class="back-btn">Back to Products</router-link>
+  </div>
+</template>
 
-    const addToComparison = () => {
-      store.dispatch('addToComparison', props.product);
-    };
+<script>
+import axios from 'axios';
 
-      const productId = computed(() => parseInt(route.params.id));
-      // const product = computed(() => store.getters.getProductById(productId.value));
-
-      const newReview = ref({
-      rating: null,
-      comment: '',
-      });
-      function addToCart(product) {
-        store.dispatch('addToCart', product);
-      }
-  
-      function addToWishlist(product) {
-        // Implement wishlist functionality
-        console.log('Add to wishlist:', product);
-      }
-      function submitReview() {
-      store.dispatch('submitReview', newReview.value);
-
-      const review = {
-        id: Date.now(), // Use a real ID in production
-        user: 'Current User', // Use the actual logged-in user's name
-        date: new Date().toLocaleDateString(),
-        rating: newReview.value.rating,
-        comment: newReview.value.comment,
-      };
-
-      // Add the review to the product
-      if (!product.value.reviews) {
-        product.value.reviews = [];
-      }
-      product.value.reviews.push(review);
-
-      // Reset the form
-      newReview.value = { rating: null, comment: '' };
-      
-      // Update the product in the store
-      store.commit('UPDATE_PRODUCT', product.value);
-      // Check for duplicate reviews
-  const isDuplicate = product.value.reviews?.some(
-    existingReview => 
-      existingReview.user === review.user && 
-      existingReview.comment === review.comment
-  );
-
-  if (!isDuplicate) {
-    if (!product.value.reviews) {
-          product.value.reviews = [];
-        }
-    product.value.reviews.push(review);
-    // Update the product in the store
-    store.commit('UPDATE_PRODUCT', product.value);
-    newReview.value = { rating: null, comment: '' };
-  } else {
-    console.log('Duplicate review detected');
-    // Optionally, show a message to the user
-  }
+export default {
+  name: 'ProductDetail',
+  data() {
+    return {
+      product: null
     }
-
-  
-      return {
-        // product,
-        addToCart,
-        addToWishlist,
-        newReview,
-        submitReview,
-        addToComparison,
-        isInComparison,
-        newReview,
-      
-
-      };
+  },
+  created() {
+    this.fetchProduct();
+  },
+  methods: {
+    async fetchProduct() {
+      try {
+        const response = await axios.get(`https://fakestoreapi.com/products/${this.$route.params.id}`);
+        this.product = response.data;
+      } catch (error) {
+        console.error('Error fetching product:', error);
+      }
     }
   }
-  </script>
-  
-  <style scoped>
-  .product-detail {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-  }
-  
-  .product-detail img {
-    max-width: 300px;
-    height: auto;
-  }
-  .reviews {
+}
+
+</script>
+
+<style scoped>
+.product-detail {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+.product-image {
+  max-width: 100%;
+  height: auto;
+  max-height: 400px;
+  object-fit: contain;
+}
+.back-btn {
+  display: inline-block;
   margin-top: 20px;
-}
-
-.review {
-  border-bottom: 1px solid #ddd;
-  padding: 10px 0;
-}
-
-form {
-  margin-top: 20px;
-}
-
-input, textarea {
-  display: block;
-  width: 100%;
-  margin-bottom: 10px;
-  padding: 5px;
-}
-
-button {
-  margin-top: 10px;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
 }
 </style>
