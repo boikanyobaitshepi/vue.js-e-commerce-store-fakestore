@@ -122,8 +122,8 @@
         newReview,
         submitReview,
         addToComparison,
-      isInComparison,
-      newReview,
+        isInComparison,
+        newReview,
       
 
       };
