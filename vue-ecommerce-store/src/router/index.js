@@ -13,7 +13,7 @@ import PaymentFailed from '../components/PaymentFailed.vue'
 import ComparisonPage from '../components/ComparisonPage.vue'
 // import ProductComparison from '../components/ProductComparison.vue'
 import DiscountedProductDetail from '../components/DiscountedProductDetail.vue'
-import Home from '../components/Home.vue'
+// import Home from '../components/Home.vue'
 import ThemeToggle from '../components/ThemeToggle.vue'
 // import { createRouter, createWebHistory } from 'vue-router'
 import store from '../store'
@@ -26,11 +26,11 @@ const routes = [
   //   component: Header
 
   // },
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
+  // {
+  //   path: '/',
+  //   name: 'Home',
+  //   component: Home
+  // },
   {
     path: '/',
     name: 'ProductList',
@@ -93,7 +93,7 @@ const routes = [
     name: 'DiscountedProductDetail',
     component: DiscountedProductDetail
   },
-  { path: '/', name: 'Home', component: Home },
+  // { path: '/', name: 'Home', component: Home },
 ]
 
 const router = createRouter({

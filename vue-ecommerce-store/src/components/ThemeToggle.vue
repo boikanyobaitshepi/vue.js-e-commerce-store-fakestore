@@ -1,9 +1,10 @@
 <!-- components/ThemeToggle.vue -->
 <template>
   <button @click="toggleTheme" :aria-label="buttonLabel" class="theme-toggle">
-    <span v-if="currentTheme === 'light'">🌙</span>
+   <span v-if="currentTheme === 'light'">🌙</span>
     <span v-else>☀️</span>
   </button>
+
 </template>
 
 <script>

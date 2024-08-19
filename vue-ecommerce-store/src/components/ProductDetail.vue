@@ -116,7 +116,7 @@
 
   
       return {
-        product,
+        // product,
         addToCart,
         addToWishlist,
         newReview,
