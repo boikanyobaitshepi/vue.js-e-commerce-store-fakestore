@@ -12,9 +12,9 @@
     </router-link></li>
           <li><router-link to="/wishlist"><i class="fas fa-heart"></i> Wishlist</router-link></li>
           <!-- <button v-if="isLoggedIn" @click="logout">Logout</button> -->
-          <li v-if="isLoggedIn">
+          <!-- <li v-if="isLoggedIn">
     <a href="#" @click.prevent="handleLogout">Logout</a>
-  </li>
+  </li> -->
           <li v-if="!isLoggedIn">
             <a href="#" @click.prevent="showModal = 'login'">
               <i class="fas fa-sign-in-alt"></i> Login
@@ -23,16 +23,16 @@
           <li v-if="isLoggedIn">
           <a href="#" @click.prevent="logout">Logout</a>
         </li>
-        <li>
+        <!-- <li>
           <ThemeToggle />
-        </li>
+        </li> -->
         </ul>
       </nav>
       <!-- <button @click="toggleTheme" class="theme-toggle" :aria-label="themeButtonLabel">
         <i :class="themeIcon"></i>
       </button> -->
     </div>
-    <LoginForm v-if="showModal === 'login'" @close="showModal = null" />
+    <Login v-if="showModal === 'login'" @close="showModal = null" />
   </header>
   </template>
   
@@ -52,7 +52,7 @@
       const router = useRouter();
       const x = ref(0);
       const showModal = ref(null);
-      const loginForm = ref({ username: '', password: '' });
+      const login = ref({ username: '', password: '' });
       // const signupForm = ref({ username: '', email: '', password: '' });
       
       const isLoggedIn = computed(() => store.getters['auth/isLoggedIn']);
@@ -63,33 +63,15 @@
       function onMousemove(e) {
         x.value = e.clientX;
       }
-  
-      async function login() {
-        try {
-          await store.dispatch('auth/login', loginForm.value);
-          showModal.value = null;
-          router.push('/');
-        } catch (error) {
-          console.error('Login failed:', error);
-        }
-      }
+
 
     const cartItemCount = computed(() => store.getters.cartItemCount);
+
   
-      // async function signup() {
-      //   try {
-      //     await store.dispatch('auth/signup', signupForm.value);
-      //     showModal.value = null;
-      //     router.push('/');
-      //   } catch (error) {
-      //     console.error('Signup failed:', error);
-      //   }
-      // }
-  
-      // function logout() {
-      //   store.dispatch('auth/logout');
-      //   router.push('/');
-      // }
+      function logout() {
+        store.dispatch('auth/logout');
+        router.push('/');
+      }
       onMounted(() => {
       store.dispatch('initTheme');
     });
@@ -97,15 +79,12 @@
         x,
         onMousemove,
         showModal,
-        login,
-        // signupForm,
+        // loginForm,
         isLoggedIn,
         cartItemCount,
         login,
-        // signup,
         handleLogout,
-        // themeIcon,
-        // toggleTheme,
+       
 
       };
     },

@@ -15,15 +15,15 @@
             {{ category }}
           </option>
         </select>
-        <!-- <select v-model="sortBy" @change="resetPage">
+        <select v-model="sortBy" @change="resetPage">
           <option value="default">Default</option>
           <option value="price_asc">Price: Low to High</option>
           <option value="price_desc">Price: High to Low</option>
-        </select> -->
-        <select v-model="sortOrder" @change="sortProducts">
+        </select>
+        <!-- <select v-model="sortOrder" @change="sortProducts">
         <option value="lowToHigh">Price: Low to High</option>
         <option value="highToLow">Price: High to Low</option>
-      </select>
+      </select> -->
         <button @click="resetFilters" class="reset-filters-btn">Reset Filters</button>
         
       </div>
