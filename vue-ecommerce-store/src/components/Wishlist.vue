@@ -1,22 +1,28 @@
 <template>
-    <div class="wishlist">
-      <h1>Wishlist</h1>
-      <div v-if="wishlistItems.length === 0">
-        Your wishlist is empty.
-      </div>
-      <div v-else>
-        <div v-for="item in wishlistItems" :key="item.id" class="wishlist-item">
-          <img :src="item.image" :alt="item.title">
-          <div>
-            <h3>{{ item.title }}</h3>
-            <p>Price: ${{ item.price.toFixed(2) }}</p>
-            <button @click="addToCart(item)">Add to Cart</button>
-            <button @click="removeFromWishlist(item.id)">Remove from Wishlist</button>
-          </div>
-        </div>
+  <div class="wishlist">
+    <h1>My Wishlist</h1>
+    <div class="wishlist-grid">
+      <div v-for="product in wishlist" :key="product.id" class="product-card">
+        <img :src="product.image" :alt="product.title">
+        <h3>{{ product.title }}</h3>
+        <p>{{ product.category }}</p>
+        <p>${{ product.price.toFixed(2) }}</p>
+        <button @click="removeFromWishlist(product)" class="remove-from-wishlist-btn">
+          <span class="btn-text">Remove from Wishlist</span>
+          <span class="btn-icon">&#10006;</span>
+        </button>
       </div>
     </div>
-  </template>
+    <button @click="addWishlistToCart" class="add-wishlist-to-cart-btn">
+      <span class="btn-text">Add all to Cart</span>
+      <span class="btn-icon">&#128722;</span>
+    </button>
+    <button @click="clearWishlist" class="clear-wishlist-btn">
+      <span class="btn-text">Clear Wishlist</span>
+      <span class="btn-icon">&#10006;</span>
+    </button>
+  </div>
+</template>
   
   <script>
   import { computed } from 'vue';

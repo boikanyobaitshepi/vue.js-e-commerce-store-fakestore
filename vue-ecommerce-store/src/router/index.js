@@ -6,10 +6,10 @@ import Checkout from '../components/Checkout.vue'
 import ProductList from '../components/ProductList.vue'
 // import  Header from '../components/Header.vue'
 import Login from '../components/Login.vue'
-import PayPalCallback from '../components/PayPalCallback.vue'
-import OrderConfirmation from '../components/OrderConfirmation.vue'
-import PaymentCancelled from '../components/PaymentCancelled.vue'
-import PaymentFailed from '../components/PaymentFailed.vue'
+// import PayPalCallback from '../components/PayPalCallback.vue'
+// import OrderConfirmation from '../components/OrderConfirmation.vue'
+// import PaymentCancelled from '../components/PaymentCancelled.vue'
+// import PaymentFailed from '../components/PaymentFailed.vue'
 import ComparisonPage from '../components/ComparisonPage.vue'
 // import ProductComparison from '../components/ProductComparison.vue'
 import DiscountedProductDetail from '../components/DiscountedProductDetail.vue'
@@ -67,10 +67,10 @@ const routes = [
   },
 
   // { path: '/login', component: Login },
-  { path: '/paypal-callback', component: PayPalCallback },
-  { path: '/order-confirmation', component: OrderConfirmation },
-  { path: '/payment-failed', component: PaymentFailed },
-  { path: '/payment-cancelled', component: PaymentCancelled },
+  // { path: '/paypal-callback', component: PayPalCallback },
+  // { path: '/order-confirmation', component: OrderConfirmation },
+  // { path: '/payment-failed', component: PaymentFailed },
+  // { path: '/payment-cancelled', component: PaymentCancelled },
   {
     path: '/comparison',
     name: 'Comparison',

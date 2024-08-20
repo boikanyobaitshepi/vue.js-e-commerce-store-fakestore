@@ -5,9 +5,9 @@
       <div class="loading-spinner"></div>
       <p>Loading products...</p>
     </div>
-      <div class="search-bar">
+      <!-- <div class="search-bar">
       <input v-model="searchQuery" type="text" placeholder="Search products...">
-    </div>
+    </div> -->
       <div class="filters">
         <select v-model="selectedCategory" @change="filteredProducts">
           <option value="">All Categories</option>
@@ -38,6 +38,10 @@
           <span class="btn-text">Add to Cart</span>
           <span class="btn-icon">🛒</span>
         </button>
+        <button @click="addToWishlist(product)" class="add-to-wishlist-btn">
+          <span class="btn-text">Add to Wishlist</span>
+          <span class="btn-icon">&#10084;</span>
+        </button>
       </div>
       </div>
      
@@ -59,6 +63,7 @@ export default {
     const resetFilters = ref('');
     const products = computed(() => store.state.products);
     const categories = computed(() => store.state.categories);
+    const wishlist = ref()
 
     const filteredProducts = computed(() => {
       let result = products.value;

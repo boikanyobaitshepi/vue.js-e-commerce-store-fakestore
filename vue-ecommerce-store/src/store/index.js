@@ -326,7 +326,21 @@ export default createStore({
       return getters.cartItems.reduce((count, item) => count + item.quantity, 0)
     },
     currentTheme: state => state.theme,
-    comparisonList: state => state.comparisonList
-  
+    comparisonList: state => state.comparisonList,
+    filteredAndSortedProducts: (state) => {
+      let result = state.products
+
+      if (state.filter) {
+        result = result.filter(product => product.category === state.filter)
+      }
+
+      if (state.sort === 'lowToHigh') {
+        result = [...result].sort((a, b) => a.price - b.price)
+      } else if (state.sort === 'highToLow') {
+        result = [...result].sort((a, b) => b.price - a.price)
+      }
+
+      return result
+    }
   }
 })
