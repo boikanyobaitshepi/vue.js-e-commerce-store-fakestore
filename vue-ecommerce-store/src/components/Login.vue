@@ -49,7 +49,11 @@
 import { ref, computed } from 'vue';
 import {useStore} from 'vuex'
 import { useRouter, useRoute } from 'vue-router';
-// import axios from 'axios';
+
+/**
+ * A Vue.js component that represents a login form.
+ * @component
+ */
 
 export default {
   setup() {
@@ -67,6 +71,12 @@ export default {
     const togglePassword = () => {
       showPassword.value = !showPassword.value;
     };
+     /**
+     * Handles the submission of the login form.
+     * It sends a POST request to the /auth/login endpoint and processes the response.
+     * If the login is successful, it updates the login state and redirects the user to the dashboard.
+     * If the login fails, it displays an error message.
+     */
 
     const handleSubmit = async () => {
   if (!username.value || !password.value) {

@@ -13,10 +13,19 @@
 <script>
 import axios from 'axios';
 
+/**
+ * The ProductDetail component for displaying the details of a product.
+ *
+ * @component
+ */
 export default {
   name: 'ProductDetail',
   data() {
     return {
+      /**
+       * The current product being displayed.
+       * @type {Object|null}
+       */
       product: null
     }
   },
@@ -24,6 +33,13 @@ export default {
     this.fetchProduct();
   },
   methods: {
+     /**
+     * Fetches the product data from the FakeStoreAPI based on the current route parameters.
+     *
+     * @async
+     * @function
+     * @returns {void}
+     */
     async fetchProduct() {
       try {
         const response = await axios.get(`https://fakestoreapi.com/products/${this.$route.params.id}`);

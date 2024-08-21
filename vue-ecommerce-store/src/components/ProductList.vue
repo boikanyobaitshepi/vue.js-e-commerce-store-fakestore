@@ -5,9 +5,6 @@
       <div class="loading-spinner"></div>
       <p>Loading products...</p>
     </div>
-      <!-- <div class="search-bar">
-      <input v-model="searchQuery" type="text" placeholder="Search products...">
-    </div> -->
       <div class="filters">
         <select v-model="selectedCategory" @change="filteredProducts">
           <option value="">All Categories</option>
@@ -20,10 +17,6 @@
           <option value="price_asc">Price: Low to High</option>
           <option value="price_desc">Price: High to Low</option>
         </select>
-        <!-- <select v-model="sortOrder" @change="sortProducts">
-        <option value="lowToHigh">Price: Low to High</option>
-        <option value="highToLow">Price: High to Low</option>
-      </select> -->
         <button @click="resetFilters" class="reset-filters-btn">Reset Filters</button>
         
       </div>
@@ -100,10 +93,6 @@ export default {
       store.dispatch('addToCart', product);
     }
 
-    // onMounted(() => {
-    //   store.dispatch('fetchProducts');
-    //   store.dispatch('fetchCategories');
-    // });
     onMounted(async () => {
       try {
         await Promise.all([
@@ -121,7 +110,6 @@ export default {
       selectedCategory,
       sortBy,
       sortOrder,
-      // products,
       addToCart,
       products,
       categories,

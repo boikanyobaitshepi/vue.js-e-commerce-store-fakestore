@@ -22,11 +22,26 @@
   <script>
   import { computed } from 'vue';
   import { useStore } from 'vuex';
-  
+  /**
+ * A Vue.js component that displays a carousel of discounted products.
+ * @component
+ */
   export default {
     name: 'DiscountedProductsCarousel',
     setup() {
       const store = useStore();
+
+          /**
+     * The list of discounted products to be displayed in the carousel.
+     * @type {Object[]}
+     * @property {number} id - The unique identifier of the product.
+     * @property {string} title - The title of the product.
+     * @property {string} image - The URL of the product image.
+     * @property {number} originalPrice - The original price of the product.
+     * @property {number} discountedPrice - The discounted price of the product.
+     * @property {number} discountPercentage - The percentage of the discount.
+     */
+
       const discountedProducts = computed(() => store.state.discountedProducts);
   
       return {

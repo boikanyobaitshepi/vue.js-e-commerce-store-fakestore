@@ -27,13 +27,23 @@
 import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-
+/**
+ * A Vue.js component that represents the checkout page for a shopping cart.
+ * @component
+ */
 export default {
   name: 'Checkout',
   setup() {
     const store = useStore();
     const router = useRouter();
-
+  
+     /**
+     * The items in the user's shopping cart.
+     * @type {Object[]}
+     * @property {number} id - The unique identifier of the item.
+     * @property {string} title - The title of the item.
+     * @property {number} price - The price of the item.
+     */
     const cartItems = computed(() => store.state.cart.items);
     const cartTotal = computed(() => store.getters['cart/total']);
 
@@ -43,7 +53,14 @@ export default {
       city: '',
       zipCode: '',
     });
-
+    /**
+     * The user's shipping information.
+     * @type {Object}
+     * @property {string} name - The name of the recipient.
+     * @property {string} address - The address of the recipient.
+     * @property {string} city - The city of the recipient.
+     * @property {string} zipCode - The zip code of the recipient.
+     */
     const paymentInfo = ref({
       cardNumber: '',
       expiryDate: '',
