@@ -33,3 +33,6 @@ Log out when you're done using the application.
 To run my code
 cd /vue-ecommerce-store/
 npm run dev
+
+YouTube video
+https://youtu.be/lH2F4ERabR4
